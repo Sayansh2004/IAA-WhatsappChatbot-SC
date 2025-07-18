@@ -1,0 +1,13 @@
+value,synonyms
+"AOS","AOS","Airport Operation Services","Airport Ops","Airport Operations"
+"HR","HR","Human Resources","Personnel","Staff","HRD","HR Dept"
+"Operations","Operations","Ops","Operation","Airport Operations","Operational"
+"General","General","Common","General Category","Miscellaneous","Other"
+"Engineering","Engineering","Engg","Technical","Engineering Dept","Engg Dept"
+"Finance","Finance","Financial","Accounts","Accounting","Finance Dept","Fin"
+"ICAO","ICAO","International Civil Aviation Organization","ICAO Category"
+"CTP","CTP","Core Training Program","Core Training","CT Program"
+"STP","STP","Special Training Program","Special Training","ST Program"
+"Others","Others","Other","Miscellaneous","General","Uncategorized"
+"ANS","ANS","Air Navigation Services","Navigation Services","ANS Category"
+"Workshop","Workshop","Workshops","Seminar","Seminars","Training Workshop","Workshop Category" 
