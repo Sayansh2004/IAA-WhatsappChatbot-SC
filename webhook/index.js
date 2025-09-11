@@ -46,6 +46,7 @@ const dialogflowHandler = require('./dialogflow');     // Our Dialogflow integra
 require('dotenv').config({ path: __dirname + '/.env' }); // Load environment variables
 const path = require('path');                         // Handle file paths
 const cors = require('cors');                         // Enable CORS for webhook
+const crypto = require('crypto');                     // For webhook signature verification
 const { SessionsClient } = require('@google-cloud/dialogflow'); // Google's AI service
 const metaApi = require('./meta-api');                // Meta Cloud API integration
 
@@ -58,11 +59,99 @@ const sessionPath = (sessionId) => dialogflowClient.projectAgentSessionPath(dial
 // 🚀 CREATE EXPRESS SERVER
 const app = express(); // Initialize our web server
 
+// 🔒 SECURITY MIDDLEWARE SETUP
+// Security functions that protect our webhook and validate inputs
+
+// 1. WEBHOOK SIGNATURE VERIFICATION - Verify requests are from Meta
+function verifyWebhookSignature(req, res, next) {
+  try {
+    const signature = req.headers['x-hub-signature-256'];
+    const payload = JSON.stringify(req.body);
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.META_WEBHOOK_SECRET || 'default_secret')
+      .update(payload)
+      .digest('hex');
+    
+    if (!signature || signature !== `sha256=${expectedSignature}`) {
+      console.log('❌ Webhook signature verification failed');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    console.log('✅ Webhook signature verified');
+    next();
+  } catch (error) {
+    console.error('❌ Webhook verification error:', error);
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+}
+
+// 2. INPUT VALIDATION - Sanitize and validate incoming data
+function validateAndSanitizeInput(req, res, next) {
+  try {
+    // Validate request body structure
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({ error: 'Invalid request format' });
+    }
+
+    // Sanitize phone numbers and messages
+    if (req.body.entry) {
+      for (const entry of req.body.entry) {
+        if (entry.changes) {
+          for (const change of entry.changes) {
+            if (change.value && change.value.messages) {
+              for (const message of change.value.messages) {
+                // Sanitize phone number
+                if (message.from) {
+                  message.from = message.from.replace(/[^0-9]/g, '');
+                  if (message.from.length < 10 || message.from.length > 15) {
+                    console.log('❌ Invalid phone number format:', message.from);
+                    return res.status(400).json({ error: 'Invalid phone number' });
+                  }
+                }
+                
+                // Sanitize message text
+                if (message.text && message.text.body) {
+                  // Remove potentially dangerous characters and limit length
+                  message.text.body = message.text.body
+                    .replace(/[<>]/g, '') // Remove HTML tags
+                    .substring(0, 1000) // Limit message length
+                    .trim();
+                  
+                  if (message.text.body.length === 0) {
+                    console.log('❌ Empty message after sanitization');
+                    return res.status(400).json({ error: 'Invalid message content' });
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    next();
+  } catch (error) {
+    console.error('❌ Input validation error:', error);
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
+}
+
+// 3. ERROR HANDLING MIDDLEWARE - Catch and handle errors safely
+function errorHandler(err, req, res, next) {
+  console.error('❌ Unhandled error:', err);
+  
+  // Don't expose internal error details
+  res.status(500).json({ 
+    error: 'Internal server error',
+    timestamp: new Date().toISOString()
+  });
+}
+
 // 📥 MIDDLEWARE SETUP
 // Middleware are functions that process requests before they reach our main logic
 app.use(cors());                                      // Enable CORS for webhook
-app.use(bodyParser.json());                           // Parse JSON data from requests
-app.use(bodyParser.urlencoded({ extended: false }));  // Parse form data from Meta
+app.use(bodyParser.json({ limit: '10mb' }));         // Parse JSON data with size limit
+app.use(bodyParser.urlencoded({ extended: false, limit: '10mb' }));  // Parse form data with size limit
 
 // 📁 SERVE STATIC FILES
 // This allows us to serve HTML, CSS, JS files from the 'public' folder
@@ -109,12 +198,13 @@ app.post('/send-whatsapp', async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('❌ Send WhatsApp error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 });
 
 // 📥 MAIN WHATSAPP WEBHOOK - This is where WhatsApp messages arrive from Meta
-app.post('/meta-webhook', metaApi.verifyWebhookSignature, async (req, res) => {
+app.post('/meta-webhook', verifyWebhookSignature, validateAndSanitizeInput, async (req, res) => {
   try {
     console.log('🚀 ===== META WEBHOOK TRIGGERED =====');
     console.log('📨 Received webhook data:', JSON.stringify(req.body, null, 2));
@@ -147,7 +237,7 @@ app.post('/meta-webhook', metaApi.verifyWebhookSignature, async (req, res) => {
         return res.status(200).send('OK');
       } else {
         console.error('❌ Failed to send test response:', result.error);
-        return res.status(500).send('Error sending response');
+        return res.status(500).json({ error: 'Internal server error' });
       }
     }
      
@@ -163,7 +253,7 @@ app.post('/meta-webhook', metaApi.verifyWebhookSignature, async (req, res) => {
         return res.status(200).send('OK');
       } else {
         console.error('❌ Failed to send greeting response:', result.error);
-        return res.status(500).send('Error sending response');
+        return res.status(500).json({ error: 'Internal server error' });
       }
     }
 
@@ -199,7 +289,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         return res.status(200).send('OK');
       } else {
         console.error('❌ Failed to send form response:', result.error);
-        return res.status(500).send('Error sending response');
+        return res.status(500).json({ error: 'Internal server error' });
       }
     }
 
@@ -868,10 +958,13 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       }
     } catch (fallbackError) {
       console.error('Critical error in fallback:', fallbackError);
-      return res.status(500).send('Critical error');
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 });
+
+// 🔒 ERROR HANDLING MIDDLEWARE - Must be last middleware
+app.use(errorHandler);
 
 // 🛠️ HELPER FUNCTIONS - Utility functions to format and process course data
 
