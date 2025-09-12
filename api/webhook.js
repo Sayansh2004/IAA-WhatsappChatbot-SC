@@ -53,12 +53,12 @@ try {
 }
 
 // Send message via Meta API
-async function sendMessage(phoneNumber, message) {
+async function sendMessage(phoneNumber, message, env) {
   try {
-    const response = await fetch(`https://graph.facebook.com/v18.0/${META_PHONE_NUMBER_ID}/messages`, {
+    const response = await fetch(`https://graph.facebook.com/v18.0/${env.META_PHONE_NUMBER_ID}/messages`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
+        'Authorization': `Bearer ${env.META_ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -176,7 +176,7 @@ async function handleWebhook(req, res) {
                   } else {
                     // Use Dialogflow for intent detection
                     if (dialogflowClient) {
-                      const sessionPath = dialogflowClient.projectPath + '/agent/sessions/' + phoneNumber;
+                      const sessionPath = `projects/${env.DIALOGFLOW_PROJECT_ID}/agent/sessions/${phoneNumber}`;
                       console.log('🔍 Dialogflow session path:', sessionPath);
                       const request = {
                         session: sessionPath,
@@ -222,15 +222,15 @@ async function handleWebhook(req, res) {
                     }
                   }
                   
-                  // Send response
-                  if (response) {
-                    await sendMessage(phoneNumber, response);
-                    console.log(`✅ Response sent to ${phoneNumber}`);
-                  }
+                    // Send response
+                    if (response) {
+                      await sendMessage(phoneNumber, response, env);
+                      console.log(`✅ Response sent to ${phoneNumber}`);
+                    }
                   
                 } catch (error) {
                   console.error('❌ Error processing message:', error);
-                  await sendMessage(phoneNumber, `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`);
+                  await sendMessage(phoneNumber, `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`, env);
                 }
               }
             }
