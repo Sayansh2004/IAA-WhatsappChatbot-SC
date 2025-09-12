@@ -52,9 +52,127 @@ const metaApi = require('./meta-api');                // Meta Cloud API integrat
 
 // 🔧 DIALOGFLOW SETUP
 // Dialogflow is Google's AI service that understands natural language
-const dialogflowProjectId = 'iaa-whatsapp-chatbot-oytl'; // Your Google Cloud project ID
+// const dialogflowProjectId = 'iaa-chatbot-whatsapp-koxw'; // Your Google Cloud project ID
+// const dialogflowClient = new SessionsClient();           // Create Dialogflow client
+// const sessionPath = (sessionId) => dialogflowClient.projectAgentSessionPath(dialogflowProjectId, sessionId); // Create session path
+
+
+const dialogflowProjectId = 'iaa-chatbot-whatsapp-koxw'; // Your Google Cloud project ID
 const dialogflowClient = new SessionsClient();           // Create Dialogflow client
-const sessionPath = (sessionId) => dialogflowClient.projectAgentSessionPath(dialogflowProjectId, sessionId); // Create session path
+
+// 🔄 CONCURRENT USER MANAGEMENT SYSTEM
+// This system prevents multiple users from interfering with each other when contacting the chatbot simultaneously
+// It uses queuing, caching, and retry logic to ensure reliable responses for all users
+
+// Queue system to handle multiple users simultaneously without conflicts
+const requestQueue = new Map(); // Store pending requests per user to prevent race conditions
+const responseCache = new Map(); // Cache common responses to reduce Dialogflow API calls and improve performance
+const MAX_RETRIES = 3; // Maximum retry attempts for Dialogflow API calls when rate limited
+const RETRY_DELAY = 1000; // Base delay between retries (1 second) - will increase exponentially
+
+// Utility to normalize phone number (remove "whatsapp:" and keep only digits)
+const normalizeNumber = (num) => {
+  return num.replace(/\D/g, '');
+};
+
+// Create session path with unique sessionId per user
+const sessionPath = (from) => {
+  const userId = normalizeNumber(from);
+  return dialogflowClient.projectAgentSessionPath(dialogflowProjectId, userId);
+};
+
+// 🔄 REQUEST QUEUE MANAGEMENT
+// This function ensures that each user's requests are processed sequentially to prevent conflicts
+// If a user sends multiple messages quickly, they will be queued and processed one by one
+async function processUserRequest(userId, requestFunction) {
+  // If user already has a pending request, wait for it to complete
+  // This prevents race conditions when users send multiple messages rapidly
+  if (requestQueue.has(userId)) {
+    console.log(`⏳ User ${userId} has pending request, queuing...`);
+    return new Promise((resolve) => {
+      const checkQueue = () => {
+        if (!requestQueue.has(userId)) {
+          // Previous request completed, now process this one
+          resolve(requestFunction());
+        } else {
+          // Still processing, check again in 100ms
+          setTimeout(checkQueue, 100);
+        }
+      };
+      checkQueue();
+    });
+  }
+  
+  // Mark user as having pending request to prevent other requests from this user
+  requestQueue.set(userId, true);
+  
+  try {
+    // Execute the actual request function (Dialogflow call)
+    const result = await requestFunction();
+    return result;
+  } finally {
+    // Always remove user from queue, even if request fails
+    // This ensures the queue doesn't get stuck
+    requestQueue.delete(userId);
+  }
+}
+
+// 🔄 RETRY LOGIC WITH EXPONENTIAL BACKOFF
+// This function handles Dialogflow API failures gracefully by retrying with increasing delays
+// It specifically handles rate limiting issues that occur when multiple users contact simultaneously
+async function retryDialogflowRequest(request, maxRetries = MAX_RETRIES) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`🔄 Dialogflow attempt ${attempt}/${maxRetries}`);
+      // Make the actual Dialogflow API call
+      const responses = await dialogflowClient.detectIntent(request);
+      return responses;
+    } catch (error) {
+      console.log(`⚠️ Dialogflow attempt ${attempt} failed:`, error.message);
+      
+      // Check if it's a rate limit error (common when multiple users contact simultaneously)
+      if (error.message.includes('rate') || error.message.includes('quota') || error.message.includes('limit')) {
+        if (attempt < maxRetries) {
+          // Exponential backoff: delay increases with each retry (1s, 2s, 4s, etc.)
+          const delay = RETRY_DELAY * Math.pow(2, attempt - 1);
+          console.log(`⏳ Rate limit hit, retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue; // Try again with longer delay
+        }
+      }
+      
+      // If not rate limit error or max retries reached, throw the error
+      // This will trigger the fallback response system
+      if (attempt === maxRetries) {
+        throw error;
+      }
+    }
+  }
+}
+
+// 🗄️ RESPONSE CACHING SYSTEM
+// This system caches common responses to reduce Dialogflow API calls and improve performance
+// It's especially useful for frequently asked questions like "show all courses"
+
+// Get cached response if it exists and hasn't expired
+function getCachedResponse(key) {
+  const cached = responseCache.get(key);
+  if (cached && Date.now() - cached.timestamp < 300000) { // 5 minutes cache (300,000ms)
+    console.log(`📋 Using cached response for: ${key}`);
+    return cached.response;
+  }
+  return null; // No valid cached response found
+}
+
+// Store response in cache with timestamp for expiration tracking
+function setCachedResponse(key, response) {
+  responseCache.set(key, {
+    response: response,
+    timestamp: Date.now() // Store when this was cached
+  });
+  console.log(`💾 Cached response for: ${key}`);
+}
+
 
 // 🚀 CREATE EXPRESS SERVER
 const app = express(); // Initialize our web server
@@ -278,7 +396,7 @@ app.post('/meta-webhook', verifyWebhookSignature, validateAndSanitizeInput, asyn
 
 It seems your query needs special attention. Please fill out the following form so that our team can review your request and get back to you promptly:
 
-🔗 https://forms.gle/iaa-registration-form-dummy
+🔗 https://iaa-admin-dashboard.vercel.app
 
 Thank you for reaching out to the Indian Aviation Academy!`;
       
@@ -532,6 +650,17 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       console.log('Message:', incomingMsg);
       console.log('From:', from);
       
+      // Check cache first for show all courses response
+      const showAllCacheKey = 'show_all_courses';
+      const cachedShowAll = getCachedResponse(showAllCacheKey);
+      if (cachedShowAll) {
+        console.log('📋 Using cached show all courses response');
+        const result = await metaApi.sendMessageWithRetry(from, cachedShowAll);
+        if (result.success) {
+          return res.status(200).send('OK');
+        }
+      }
+      
       try {
         const response = `🏗️ *IAA Course Categories - Choose a Domain:*\n\n` +
                         `1️⃣ *Aerodrome Design, Operations, Planning & Engineering*\n` +
@@ -560,6 +689,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         
         if (result.success) {
           console.log('✅ Response sent successfully to WhatsApp');
+          // Cache the show all courses response
+          setCachedResponse(showAllCacheKey, response);
           return res.status(200).send('OK');
         } else {
           console.error('❌ Failed to send response:', result.error);
@@ -733,10 +864,13 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     if (incomingMsg && incomingMsg.trim().length > 3) {
       try {
         console.log('🔍 SEARCHING FOR COURSE:', incomingMsg);
+         const startTime = Date.now();
         const courses = require('../data/courses.json');
         console.log('📊 Total courses loaded:', courses.length);
         
         const foundCourse = findCourseByPartialName(incomingMsg, courses);
+         const endTime = Date.now(); // ⏱️ end timer
+    console.log(`⏱️ Course search & selection took ${endTime - startTime} ms`);
         
         if (foundCourse) {
           console.log('📚 COURSE FOUND BY NAME:', foundCourse['प्रशिक्षण कार्यक्रम Programme']);
@@ -761,13 +895,23 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     }
 
     // 🤖 DIALOGFLOW INTEGRATION - Let AI handle complex queries and course information
-    // Create a unique session for each user (use WhatsApp number)
-    const sessionId = from; // Use phone number directly for Meta API
-    console.log('Session ID:', sessionId);
+    // Use concurrent user management system to handle multiple users simultaneously
+    
+    const userId = normalizeNumber(from);
+    const cacheKey = `dialogflow_${incomingMsg.toLowerCase().trim()}`;
+    
+    // Check cache first for common responses
+    const cachedResponse = getCachedResponse(cacheKey);
+    if (cachedResponse) {
+      console.log('📋 Using cached Dialogflow response');
+      const result = await metaApi.sendMessageWithRetry(from, cachedResponse);
+      if (result.success) {
+        return res.status(200).send('OK');
+      }
+    }
 
-    // Send message to Dialogflow and get proper intent-based response
     const request = {
-      session: sessionPath(sessionId),
+      session: sessionPath(from),   // directly pass user phone number
       queryInput: {
         text: {
           text: incomingMsg,
@@ -779,10 +923,15 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     console.log('Sending to Dialogflow:', request);
 
     let dialogflowResponse = 'Sorry, I am having trouble understanding you right now.';
+    
+    // Use request queue to handle concurrent users
     try {
-      console.log('Calling Dialogflow...');
-      const responses = await dialogflowClient.detectIntent(request);
-      console.log('Dialogflow response:', responses);
+      const responses = await processUserRequest(userId, async () => {
+        console.log('Calling Dialogflow with retry logic...');
+        return await retryDialogflowRequest(request);
+      });
+      
+      console.log('Dialogflow response received successfully');
       
       if (responses && responses[0] && responses[0].queryResult) {
         const queryResult = responses[0].queryResult;
@@ -796,7 +945,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         // 🎯 CONFIDENCE SCORE CHECK - Trigger fallback only for very low confidence
         if (confidence < 0.3) {
           console.log('⚠️ Very low confidence detected:', confidence, '- Triggering fallback form');
-          const fallbackResponse = `🤔 *I understand you're looking for information, but I want to make sure I give you the most accurate details.*\n\nSince your query is quite specific, I'd recommend filling out our detailed form so our team can provide you with the most relevant and up-to-date information:\n\n🔗 https://forms.gle/iaa-registration-form-dummy\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+          const fallbackResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
           
           const result = await metaApi.sendMessageWithRetry(from, fallbackResponse);
           
@@ -818,6 +967,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         // 🎯 HANDLE SPECIFIC INTENTS FOR WHATSAPP - Custom responses for common intents
         if (intent === 'greeting' || intent === 'welcome') {
           dialogflowResponse = `👋 *Hello! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+        } else if (intent === 'goodbye' || intent === 'farewell' || intent === 'end_conversation') {
+          // 🎉 BEAUTIFUL GOODBYE RESPONSE - Professional and personalized farewell
+          const userName = queryResult.parameters.person_name || 'Valued Student';
+          dialogflowResponse = `🎉 *Thank you for contacting Indian Aviation Academy!*\n\n✨ *Happy to serve you, ${userName}!* ✨\n\n🌟 *Hope you had a smooth interaction with me!* 🌟\n\n📚 *Remember:*\n• I'm always here to help with course information\n• Feel free to ask about any training programs\n• Contact us anytime for assistance\n\n🚀 *Wishing you success in your aviation journey!*\n\n*Best regards,*\n*IAA Support Team* 🛩️\n\n*--- End of Conversation ---*`;
         } else if (intent === 'list_courses' || intent === 'show_all_courses') {
           dialogflowResponse = `🏗️ *IAA Course Categories - Choose a Domain:*\n\n` +
                              `1️⃣ *Aerodrome Design, Operations, Planning & Engineering*\n` +
@@ -893,19 +1046,52 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
         }
         
+        // 🎯 DIALOGFLOW GENERIC RESPONSE DETECTION - Replace generic Dialogflow responses with beautiful fallback
+        const dialogflowGenericResponses = [
+          'What was that?',
+          'One more time?',
+          'I didn\'t get that',
+          'Can you say that again?',
+          'I\'m sorry, I didn\'t understand',
+          'Could you repeat that?',
+          'I didn\'t catch that',
+          'Sorry, what did you say?'
+        ];
+        
+        const isDialogflowGeneric = dialogflowGenericResponses.some(genericResponse => 
+          dialogflowResponse.toLowerCase().includes(genericResponse.toLowerCase())
+        );
+        
+        if (isDialogflowGeneric) {
+          console.log('🎯 Dialogflow generic response detected, replacing with beautiful fallback');
+          dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+        }
+        
         console.log('Final Dialogflow response:', dialogflowResponse);
       } else {
         dialogflowResponse = 'I received your message but couldn\'t process it properly.';
       }
     } catch (err) {
-      console.error('Dialogflow error:', err);
-      dialogflowResponse = 'Sorry, I am having trouble understanding you right now. Please try asking about courses or specific information.';
+      console.error('Dialogflow error after retries:', err.message);
+      
+      // Check if it's a rate limit error that couldn't be resolved
+      if (err.message.includes('rate') || err.message.includes('quota') || err.message.includes('limit')) {
+        console.log('⚠️ Rate limit error persists after retries, using cached response or fallback');
+        dialogflowResponse = 'I\'m experiencing high traffic right now. Please try again in a moment or use "show all courses" to see available options.';
+      } else {
+        // For other errors, provide helpful response
+        dialogflowResponse = 'I understand you\'re looking for course information. Please try asking about specific courses or use "show all courses" to see available options.';
+      }
     }
 
-    // 🧠 SMART FALLBACK - If Dialogflow response is generic, offer the form
-    if (dialogflowResponse.includes('Sorry, I am having trouble') || 
-        dialogflowResponse.includes('don\'t have a specific response') ||
-        dialogflowResponse.includes('couldn\'t process it properly')) {
+    // 🧠 IMPROVED FALLBACK LOGIC - Only show form for truly unknown queries
+    const isGenericResponse = dialogflowResponse.includes('Sorry, I am having trouble') || 
+                             dialogflowResponse.includes('don\'t have a specific response') ||
+                             dialogflowResponse.includes('couldn\'t process it properly') ||
+                             dialogflowResponse.includes('I understand you\'re looking for');
+    
+    if (isGenericResponse && !incomingMsg.toLowerCase().includes('course') && 
+        !incomingMsg.toLowerCase().includes('show') && !incomingMsg.toLowerCase().includes('domain')) {
       
       const smartFormResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
       
@@ -919,6 +1105,18 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       }
     }
 
+    // 🎉 FALLBACK GOODBYE DETECTION - Check if user is saying goodbye even if Dialogflow didn't catch it
+    const goodbyeKeywords = ['bye', 'goodbye', 'farewell', 'see you', 'take care', 'thanks', 'thank you', 'tata', 'chao', 'adios'];
+    const isGoodbyeMessage = goodbyeKeywords.some(keyword => 
+      incomingMsg.toLowerCase().includes(keyword.toLowerCase())
+    );
+    
+    if (isGoodbyeMessage && (dialogflowResponse.includes('don\'t have a specific response') || 
+        dialogflowResponse.includes('understand your message'))) {
+      console.log('🎉 Fallback goodbye detection triggered');
+      dialogflowResponse = `🎉 *Thank you for contacting Indian Aviation Academy!*\n\n✨ *Happy to serve you!* ✨\n\n🌟 *Hope you had a smooth interaction with me!* 🌟\n\n📚 *Remember:*\n• I'm always here to help with course information\n• Feel free to ask about any training programs\n• Contact us anytime for assistance\n\n🚀 *Wishing you success in your aviation journey!*\n\n*Best regards,*\n*IAA Support Team* 🛩️\n\n*--- End of Conversation ---*`;
+    }
+
     // 📤 RESPOND TO WHATSAPP VIA META API - Send the final response back to user
     console.log('🚀 ===== SENDING RESPONSE TO WHATSAPP =====');
     console.log('📤 Dialogflow response to send:', dialogflowResponse);
@@ -926,13 +1124,20 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     // Ensure response is not empty or undefined
     if (!dialogflowResponse || dialogflowResponse.trim() === '') {
       console.log('⚠️ Warning: Empty response detected, using fallback');
-      dialogflowResponse = 'I understand your query but need more specific information. Please try asking about a specific course or use "show all courses" to see available options.';
+      dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
     }
     
     const result = await metaApi.sendMessageWithRetry(from, dialogflowResponse);
     
     if (result.success) {
       console.log('✅ Dialogflow response sent successfully to WhatsApp!');
+      
+      // Cache successful responses for common queries
+      if (dialogflowResponse && !dialogflowResponse.includes('Sorry') && 
+          !dialogflowResponse.includes('trouble') && dialogflowResponse.length > 50) {
+        setCachedResponse(cacheKey, dialogflowResponse);
+      }
+      
       console.log('🏁 ===== WEBHOOK COMPLETED =====');
       return res.status(200).send('OK');
     } else {
@@ -944,7 +1149,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     console.error('Critical error in webhook:', error);
     
     // 🚨 CRITICAL ERROR FALLBACK - Send form when critical errors occur
-    const errorFormResponse = `🚨 *We encountered a technical issue while processing your request.*\n\nTo ensure you get the help you need, please fill out our detailed form:\n\n🔗 https://forms.gle/iaa-registration-form-dummy\n\nOur team will assist you promptly and resolve any technical issues.\n\nThank you for your patience!`;
+    const errorFormResponse = `🚨 *We encountered a technical issue while processing your request.*\n\nTo ensure you get the help you need, please fill out our detailed form so our team can assist you properly:\n\n🔗 htt
+    ps://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
     
     try {
       const result = await metaApi.sendMessageWithRetry(from, errorFormResponse);
@@ -999,7 +1205,10 @@ function formatCourseInfo(course) {
          `💸 *Fee after group discount:* ₹${course['Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)']}\n` +
          `🏨 *Hostel Charges:* ₹${course['Hostel Charges'] || 'Not available'}\n` +
          `👨‍🏫 *Coordinator(s):* ${course['पाठ्यक्रम समन्वयक Course Coordinator']}\n` +
-         `🏷️ *Category:* ${course['श्रेणी Category']}`;
+         `🏷️ *Category:* ${course['श्रेणी Category']}\n` +
+         `📞 *Contact:* ${course['Phone number'] || 'Not available'}\n` 
+         `📧 *Email:* ${course['email'] || 'Not available'}\n\n` 
+         ;
 }
 
 // 🔍 FIND COURSE BY NAME - Search for a course using its full name (case-insensitive)
@@ -1049,3 +1258,32 @@ app.listen(PORT, () => {
   console.log(`🧪 Test endpoint at: http://localhost:${PORT}/test`);
   console.log(`🔧 Meta API config valid: ${metaApi.validateMetaConfig()}`);
 });
+
+// Export the webhook handler for Vercel serverless function
+const handleWebhook = async (req, res) => {
+  // Handle GET requests (webhook verification)
+  if (req.method === 'GET') {
+    const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || 'iaa_chatbot_verify_token_2024';
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
+
+    if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
+      console.log('✅ Webhook verified successfully');
+      return res.status(200).send(challenge);
+    } else {
+      console.log('❌ Webhook verification failed');
+      return res.status(403).send('Forbidden');
+    }
+  }
+
+  // Handle POST requests (incoming messages)
+  if (req.method === 'POST') {
+    return await handleIncomingMessage(req, res);
+  }
+
+  // Handle other methods
+  return res.status(405).send('Method Not Allowed');
+};
+
+module.exports = { app, handleWebhook };

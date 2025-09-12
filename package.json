@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "WhatsApp chatbot for Indian Aviation Academy using Dialogflow ES, Node.js, and Meta Cloud API.",
   "main": "webhook/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node webhook/index.js",
+    "dev": "node webhook/index.js",
+    "build": "echo 'No build step required'",
     "convert-data": "node scripts/convert_excel_to_json.js"
   },
   "dependencies": {

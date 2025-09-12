@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
   const isFormRequest = formKeywords.some(keyword => userText.includes(keyword));
   if (isFormRequest) {
     return res.json({
-      fulfillmentText: `📝 *We're here to help you further!*\n\nIt seems your query needs special attention. Please fill out the following form so that our team can review your request and get back to you promptly:\n\n🔗 https://forms.gle/iaa-registration-form-dummy\n\nThank you for reaching out to the Indian Aviation Academy!`
+      fulfillmentText: `📝 *We're here to help you further!*\n\nIt seems your query needs special attention. Please fill out the following form so that our team can review your request and get back to you promptly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\nThank you for reaching out to the Indian Aviation Academy!`
     });
   }
 
@@ -206,6 +206,35 @@ module.exports = async (req, res) => {
 
   // Helper function to format course information
   function formatCourseInfo(course) {
+    // Format contact information for multiple coordinators
+    let contactInfo = '';
+    if (course['Phone number'] && course['Phone number'] !== 'Not available') {
+      const phones = course['Phone number'].split(', ');
+      const emails = course['email'] ? course['email'].split(', ') : [];
+      const coordinators = course['पाठ्यक्रम समन्वयक Course Coordinator'].split(/[&,;]| and /i).map(c => c.trim());
+      
+    if (phones.length > 1) {
+      // Multiple coordinators - format with names
+      contactInfo = `📞 **Contact Information:**\n`;
+      coordinators.forEach((coordinator, index) => {
+        if (phones[index] && phones[index] !== 'Not available') {
+          contactInfo += `   • ${coordinator.trim()}: ${phones[index]}`;
+          if (emails[index] && emails[index] !== 'Not available') {
+            contactInfo += ` | ${emails[index]}`;
+          }
+          contactInfo += '\n';
+        }
+      });
+    } else {
+        // Single coordinator or same contact for all
+        contactInfo = `📞 **Contact:** ${course['Phone number']}\n` +
+                     `📧 **Email:** ${course['email'] || 'Not available'}\n`;
+      }
+    } else {
+      contactInfo = `📞 **Contact:** Not available\n` +
+                   `📧 **Email:** Not available\n`;
+    }
+
     return `📘 **Course Details:**\n\n` +
            `🎯 **Name:** ${course['प्रशिक्षण कार्यक्रम Programme']}\n` +
            `🧑‍🎓 **Level:** ${course['प्रतिभागियो का स्तर Level of Participants']}\n` +
@@ -215,10 +244,11 @@ module.exports = async (req, res) => {
            `💸 **Fee after group discount:** ₹${course['Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)']}\n` +
            `🏨 **Hostel Charges:** ₹${course['Hostel Charges'] || 'Not available'}\n` +
            `👨‍🏫 **Coordinator(s):** ${course['पाठ्यक्रम समन्वयक Course Coordinator']}\n` +
-           `🏷️ **Category:** ${course['श्रेणी Category']}`;
+           `🏷️ **Category:** ${course['श्रेणी Category']}\n` +
+           contactInfo + `\n`;
   }
 
-  // Robustly extract courseName as a string
+  // Robustly extract courseName as a string   dialgflow  
   let courseName = parameters['course_name'];
   if (Array.isArray(courseName)) {
     courseName = courseName[0];
@@ -241,8 +271,14 @@ module.exports = async (req, res) => {
   if (courseName) {
     // More robust matching: exact, partial, and synonym match (normalized)
     course = courses.find(c => {
+      // Ensure course has required properties
+      if (!c || !c['प्रशिक्षण कार्यक्रम Programme']) return false;
+      
       const courseTitle = normalize(c['प्रशिक्षण कार्यक्रम Programme']);
       const searchTerm = normalize(courseName);
+      
+      // Skip very short search terms that are likely not course names
+      if (searchTerm.length < 2) return false;
       
       // Exact match
       if (courseTitle === searchTerm) return true;
@@ -253,26 +289,48 @@ module.exports = async (req, res) => {
       // Partial match - course title in search term
       if (searchTerm.includes(courseTitle)) return true;
       
-      // Word-by-word matching for better results
-      const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 2);
-      const courseWords = courseTitle.split(/\s+/).filter(word => word.length > 2);
+      // Word-by-word matching for better results (only for longer search terms)
+      if (searchTerm.length >= 3) {
+        const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 2);
+        const courseWords = courseTitle.split(/\s+/).filter(word => word.length > 2);
+        
+        // Check if most search words are in course words
+        const matchingWords = searchWords.filter(searchWord => 
+          courseWords.some(courseWord => 
+            courseWord.includes(searchWord) || searchWord.includes(courseWord)
+          )
+        );
+        
+        return matchingWords.length >= Math.min(2, searchWords.length);
+      }
       
-      // Check if most search words are in course words
-      const matchingWords = searchWords.filter(searchWord => 
-        courseWords.some(courseWord => 
-          courseWord.includes(searchWord) || searchWord.includes(courseWord)
-        )
-      );
-      
-      return matchingWords.length >= Math.min(2, searchWords.length);
+      return false;
     });
 
-    // Enhanced Power BI matching
+    // Enhanced Power BI matching - prioritize exact matches
     if (!course && (normalize(courseName).includes('power') || normalize(courseName).includes('bi') || normalize(courseName).includes('powerbi'))) {
-      course = courses.find(c => 
-        normalize(c['प्रशिक्षण कार्यक्रम Programme']).includes('power') ||
-        normalize(c['प्रशिक्षण कार्यक्रम Programme']).includes('bi')
-      );
+      course = courses.find(c => {
+        const courseTitle = normalize(c['प्रशिक्षण कार्यक्रम Programme']);
+        // Prioritize courses that contain both "power" and "bi" or "data analytics"
+        return (courseTitle.includes('power') && courseTitle.includes('bi')) ||
+               courseTitle.includes('data analytics') ||
+               courseTitle.includes('powerbi');
+      });
+    }
+
+    // If we found a course but it's not the right one for Power BI, try again
+    if (course && normalize(courseName).includes('power') && normalize(courseName).includes('bi')) {
+      const currentCourseTitle = normalize(course['प्रशिक्षण कार्यक्रम Programme']);
+      if (!currentCourseTitle.includes('data analytics') && !currentCourseTitle.includes('powerbi')) {
+        // Look for the actual Power BI course
+        const powerBiCourse = courses.find(c => {
+          const courseTitle = normalize(c['प्रशिक्षण कार्यक्रम Programme']);
+          return courseTitle.includes('data analytics') && courseTitle.includes('power');
+        });
+        if (powerBiCourse) {
+          course = powerBiCourse;
+        }
+      }
     }
 
     // Enhanced course name matching for all courses
@@ -312,14 +370,24 @@ module.exports = async (req, res) => {
     if (!course && courseName.length <= 5) {
       const normalizedQuery = normalize(courseName);
       course = courses.find(c => {
-        const courseName = c['प्रशिक्षण कार्यक्रम Programme'];
+        const courseTitle = c['प्रशिक्षण कार्यक्रम Programme'];
         // Check if course name contains the abbreviation
-        if (normalize(courseName).includes(normalizedQuery)) return true;
+        if (normalize(courseTitle).includes(normalizedQuery)) return true;
         
         // Check if it's an acronym match
-        const words = courseName.split(/\s+/);
+        const words = courseTitle.split(/\s+/);
         const acronym = words.map(word => word.charAt(0)).join('').toLowerCase();
         return acronym.includes(normalizedQuery) || normalizedQuery.includes(acronym);
+      });
+    }
+
+    // Enhanced GST matching
+    if (!course && (normalize(courseName).includes('gst') || normalize(courseName).includes('tax'))) {
+      course = courses.find(c => {
+        const courseTitle = normalize(c['प्रशिक्षण कार्यक्रम Programme']);
+        return courseTitle.includes('gst') || 
+               courseTitle.includes('goods and services tax') ||
+               courseTitle.includes('statutory taxation');
       });
     }
 
@@ -702,10 +770,10 @@ module.exports = async (req, res) => {
     !userText.includes('hi') && 
     !userText.includes('hello') &&
     !userText.match(/\d+/) && // not a number
-    userText.length < 4; // very short queries like "haha", "ok", "yes"
+    userText.length < 2; // very short queries like "ok", "yes" (but allow "SMS", "DOP", etc.)
   
   if (isUnknownQuery) {
-    response = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://forms.gle/iaa-registration-form-dummy\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+    response = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
   } else if (course) {
     switch (intent) {
       case 'course_info':
@@ -736,7 +804,7 @@ module.exports = async (req, res) => {
         break;
     }
   } else if (courseName) {
-    response = `📝 *We're here to help you further!*\n\nIt looks like I was unable to find the course you're looking for. Please fill out the following form so that our team can review your request and get back to you promptly:\n\n🔗 https://forms.gle/iaa-registration-form-dummy\n\nThank you for reaching out to the Indian Aviation Academy!`;
+    response = `📝 *We're here to help you further!*\n\nIt looks like I was unable to find the course you're looking for. Please fill out the following form so that our team can review your request and get back to you promptly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\nThank you for reaching out to the Indian Aviation Academy!`;
   } else {
     // Default response for other queries
     response = `I understand you're looking for information. Here's how I can help:\n\n• Type "show all courses" to see available courses\n• Type "domain 1" to see aerodrome courses\n• Ask about specific course details like "Safety Management System"\n• Type a course number (e.g., "6" or "course 6")\n\nHow can I assist you today?`;
