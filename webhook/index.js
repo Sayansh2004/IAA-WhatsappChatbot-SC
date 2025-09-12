@@ -1449,8 +1449,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           }
         }
 
-        // 📚 COURSE NAME RECOGNITION - Handle direct course name searches
-        if (incomingMsg && incomingMsg.trim().length > 3) {
+        // 📚 COURSE NAME RECOGNITION - Handle direct course name searches FIRST
+        if (incomingMsg && incomingMsg.trim().length > 2) {
           try {
             console.log('🔍 SEARCHING FOR COURSE:', incomingMsg);
             const courses = require('../data/courses.json');
