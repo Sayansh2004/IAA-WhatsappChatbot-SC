@@ -1353,7 +1353,7 @@ const handleWebhook = async (req, res) => {
         // 👋 GREETING HANDLER - Handle basic greetings directly (bypasses Dialogflow)
         if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
           console.log('👋 GREETING DETECTED - Sending welcome response');
-          const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+          const greetingResponse = `👋 *Hello! I'm the IAA Chatbot.*\n\nI can help you with:\n• Course information\n• Registration details\n• Training programs\n\n💡 *Try saying:*\n• "show all courses"\n• "domain 1"\n• Ask about specific courses\n\nHow can I assist you today?`;
           
           const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
           
@@ -1529,6 +1529,9 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             if (intent === 'course_info') {
               dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
               console.log('🎯 Course info intent detected, using fulfillment text:', dialogflowResponse);
+            } else if (intent === 'Default Fallback Intent') {
+              // Handle fallback intent with better response
+              dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
             } else {
               dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
             }
@@ -1539,7 +1542,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           }
         } catch (err) {
           console.error('Dialogflow error after retries:', err.message);
-          dialogflowResponse = 'I understand you\'re looking for course information. Please try asking about specific courses or use "show all courses" to see available options.';
+          dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
         }
 
         // 📤 RESPOND TO WHATSAPP VIA META API - Send the final response back to user
