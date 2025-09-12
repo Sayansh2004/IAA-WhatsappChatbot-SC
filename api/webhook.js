@@ -12,27 +12,35 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Environment variables
-const DIALOGFLOW_PROJECT_ID = process.env.DIALOGFLOW_PROJECT_ID;
-const DIALOGFLOW_PRIVATE_KEY = process.env.DIALOGFLOW_PRIVATE_KEY?.replace(/\\n/g, '\n');
-const DIALOGFLOW_CLIENT_EMAIL = process.env.DIALOGFLOW_CLIENT_EMAIL;
-const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
-const META_VERIFY_TOKEN = process.env.META_VERIFY_TOKEN;
-const META_PHONE_NUMBER_ID = process.env.META_PHONE_NUMBER_ID;
-const META_WEBHOOK_VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN;
+// Environment variables - Load them inside the function to ensure they're available
+function getEnvVars() {
+  return {
+    DIALOGFLOW_PROJECT_ID: process.env.DIALOGFLOW_PROJECT_ID,
+    DIALOGFLOW_PRIVATE_KEY: process.env.DIALOGFLOW_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    DIALOGFLOW_CLIENT_EMAIL: process.env.DIALOGFLOW_CLIENT_EMAIL,
+    META_ACCESS_TOKEN: process.env.META_ACCESS_TOKEN,
+    META_VERIFY_TOKEN: process.env.META_VERIFY_TOKEN,
+    META_PHONE_NUMBER_ID: process.env.META_PHONE_NUMBER_ID,
+    META_WEBHOOK_VERIFY_TOKEN: process.env.META_WEBHOOK_VERIFY_TOKEN
+  };
+}
 
 // Initialize Dialogflow client
 let dialogflowClient;
-try {
-  dialogflowClient = new SessionsClient({
-    credentials: {
-      client_email: DIALOGFLOW_CLIENT_EMAIL,
-      private_key: DIALOGFLOW_PRIVATE_KEY,
-    },
-    projectId: DIALOGFLOW_PROJECT_ID,
-  });
-} catch (error) {
-  console.error('❌ Dialogflow client error:', error);
+function initializeDialogflowClient() {
+  const env = getEnvVars();
+  try {
+    dialogflowClient = new SessionsClient({
+      credentials: {
+        client_email: env.DIALOGFLOW_CLIENT_EMAIL,
+        private_key: env.DIALOGFLOW_PRIVATE_KEY,
+      },
+      projectId: env.DIALOGFLOW_PROJECT_ID,
+    });
+    console.log('✅ Dialogflow client initialized with project:', env.DIALOGFLOW_PROJECT_ID);
+  } catch (error) {
+    console.error('❌ Dialogflow client error:', error);
+  }
 }
 
 // Load courses data
@@ -77,6 +85,15 @@ async function handleWebhook(req, res) {
   try {
     console.log('🚀 Webhook request received');
     
+    // Initialize Dialogflow client if not already done
+    if (!dialogflowClient) {
+      initializeDialogflowClient();
+    }
+    
+    // Get environment variables
+    const env = getEnvVars();
+    console.log('🔍 Environment check - DIALOGFLOW_PROJECT_ID:', env.DIALOGFLOW_PROJECT_ID);
+    
     // Handle GET request (webhook verification)
     if (req.method === 'GET') {
       const mode = req.query['hub.mode'];
@@ -85,9 +102,9 @@ async function handleWebhook(req, res) {
       
       console.log('🔍 Debug - Mode:', mode);
       console.log('🔍 Debug - Token received:', JSON.stringify(token));
-      console.log('🔍 Debug - Expected token:', JSON.stringify(META_WEBHOOK_VERIFY_TOKEN));
+      console.log('🔍 Debug - Expected token:', JSON.stringify(env.META_WEBHOOK_VERIFY_TOKEN));
       console.log('🔍 Debug - Token length received:', token ? token.length : 'undefined');
-      console.log('🔍 Debug - Token length expected:', META_WEBHOOK_VERIFY_TOKEN ? META_WEBHOOK_VERIFY_TOKEN.length : 'undefined');
+      console.log('🔍 Debug - Token length expected:', env.META_WEBHOOK_VERIFY_TOKEN ? env.META_WEBHOOK_VERIFY_TOKEN.length : 'undefined');
       console.log('🔍 Debug - Challenge:', challenge);
       
       // If no webhook parameters, return success message for browser visits
@@ -102,7 +119,7 @@ async function handleWebhook(req, res) {
       }
       
       // Meta webhook verification
-      if (mode === 'subscribe' && token === META_WEBHOOK_VERIFY_TOKEN) {
+      if (mode === 'subscribe' && token === env.META_WEBHOOK_VERIFY_TOKEN) {
         console.log('✅ Webhook verified');
         return res.status(200).send(challenge);
       } else {
@@ -160,6 +177,7 @@ async function handleWebhook(req, res) {
                     // Use Dialogflow for intent detection
                     if (dialogflowClient) {
                       const sessionPath = dialogflowClient.projectPath + '/agent/sessions/' + phoneNumber;
+                      console.log('🔍 Dialogflow session path:', sessionPath);
                       const request = {
                         session: sessionPath,
                         queryInput: {
@@ -220,7 +238,14 @@ async function handleWebhook(req, res) {
         }
       }
       
-      return res.status(200).send('OK');
+      return res.status(200).json({
+        fulfillmentText: 'Message processed successfully',
+        fulfillmentMessages: [{
+          text: {
+            text: ['Message processed successfully']
+          }
+        }]
+      });
     }
     
     return res.status(405).send('Method not allowed');
