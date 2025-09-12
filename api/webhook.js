@@ -233,8 +233,15 @@ async function handleWebhook(req, res) {
                         }
                       } else if (intent === 'goodbye' || intent === 'farewell' || intent === 'end_conversation') {
                         response = `👋 *Thank you for contacting Indian Aviation Academy!*\n\n😊 *Happy to serve you!*\n\n✨ *Hope you had a smooth interaction with me!*\n\n📞 *For more assistance, feel free to contact us anytime!*`;
+                      } else if (intent === 'Default Fallback Intent' || intent === 'Default Welcome Intent' || intent === 'greeting') {
+                        // Handle greeting and fallback intents
+                        if (fulfillmentText) {
+                          response = fulfillmentText;
+                        } else {
+                          response = `👋 *Hello! Welcome to Indian Aviation Academy!*\n\nI'm here to help you with information about our courses and training programs.\n\n💡 *You can ask me:*\n• "show all courses" - to see available courses\n• "course details" - for specific course information\n• "goodbye" - to end the conversation\n\nHow can I assist you today?`;
+                        }
                       } else {
-                        response = fulfillmentText;
+                        response = fulfillmentText || `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
                       }
                     } else {
                       response = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
