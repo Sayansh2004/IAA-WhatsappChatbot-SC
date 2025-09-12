@@ -911,14 +911,14 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     }
 
     const request = {
-      session: sessionPath(from),   // directly pass user phone number
-      queryInput: {
-        text: {
-          text: incomingMsg,
-          languageCode: 'en',
-        },
-      },
-    };
+  session: sessionPath(from),   // directly pass user phone number
+  queryInput: {
+    text: {
+      text: incomingMsg,
+      languageCode: 'en',
+    },
+  },
+};
 
     console.log('Sending to Dialogflow:', request);
 
@@ -1086,7 +1086,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
 
     // 🧠 IMPROVED FALLBACK LOGIC - Only show form for truly unknown queries
     const isGenericResponse = dialogflowResponse.includes('Sorry, I am having trouble') || 
-                             dialogflowResponse.includes('don\'t have a specific response') ||
+        dialogflowResponse.includes('don\'t have a specific response') ||
                              dialogflowResponse.includes('couldn\'t process it properly') ||
                              dialogflowResponse.includes('I understand you\'re looking for');
     
@@ -1292,60 +1292,12 @@ const handleWebhook = async (req, res) => {
       }
     }
 
-    // Handle POST requests (incoming messages)
+    // Handle POST requests (incoming messages) - COPY THE ENTIRE WEBHOOK LOGIC
     if (req.method === 'POST') {
-      console.log('📨 Incoming POST request');
+      console.log('🚀 ===== META WEBHOOK TRIGGERED =====');
+      console.log('📨 Received webhook data:', JSON.stringify(req.body, null, 2));
       
-      // Check if this is a Meta webhook (WhatsApp messages)
-      if (req.body && req.body.object === 'whatsapp_business_account') {
-        console.log('📱 Meta webhook detected');
-        
-        // Process the webhook data
-        const messageData = metaApi.processIncomingMessage(req.body);
-        
-        if (!messageData) {
-          console.log('ℹ️ No valid message found in webhook data');
-          return res.status(200).send('OK');
-        }
-        
-        const incomingMsg = messageData.text;
-        const from = messageData.from;
-        const userName = messageData.name;
-        
-        console.log('💬 Processing message:', incomingMsg);
-        console.log('👤 From:', from, `(${userName})`);
-        
-        // Handle greeting
-        if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
-          console.log('👋 GREETING DETECTED');
-          const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
-          
-          const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
-          
-          if (result.success) {
-            console.log('✅ Greeting response sent successfully');
-            return res.status(200).send('OK');
-          } else {
-            console.error('❌ Failed to send greeting response:', result.error);
-            return res.status(500).json({ error: 'Internal server error' });
-          }
-        }
-        
-        // For other messages, send a simple response
-        const response = `👋 *Hello! I'm the IAA Chatbot.*\n\nI can help you with:\n• Course information\n• Registration details\n• Training programs\n\n💡 *Try saying:*\n• "show all courses"\n• "domain 1"\n• Ask about specific courses\n\nHow can I assist you today?`;
-        
-        const result = await metaApi.sendMessageWithRetry(from, response);
-        
-        if (result.success) {
-          console.log('✅ Response sent successfully');
-          return res.status(200).send('OK');
-        } else {
-          console.error('❌ Failed to send response:', result.error);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
-      }
-      
-      // Check if this is a Dialogflow webhook
+      // Check if this is a Dialogflow webhook first
       if (req.body && req.body.responseId && req.body.queryResult) {
         console.log('🤖 Dialogflow webhook detected');
         const intent = req.body.queryResult.intent?.displayName || 'Default Fallback Intent';
@@ -1362,6 +1314,261 @@ const handleWebhook = async (req, res) => {
             }
           }]
         });
+      }
+      
+      // Check if this is a Meta webhook (WhatsApp messages)
+      if (req.body && req.body.object === 'whatsapp_business_account') {
+        // 📝 PROCESS INCOMING MESSAGE
+        const messageData = metaApi.processIncomingMessage(req.body);
+        
+        if (!messageData) {
+          console.log('ℹ️ No valid message found in webhook data');
+          return res.status(200).send('OK');
+        }
+        
+        const incomingMsg = messageData.text;
+        const from = messageData.from;
+        const userName = messageData.name;
+        
+        console.log('💬 Processing message:', incomingMsg);
+        console.log('👤 From:', from, `(${userName})`);
+        console.log('📊 Message length:', incomingMsg ? incomingMsg.length : 'undefined');
+        
+        // 🧪 TEST MESSAGE HANDLER - For debugging and testing
+        if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
+          console.log('🧪 TEST MESSAGE DETECTED - Sending test response');
+          const testResponse = `🧪 *Test successful!*\n\nYour WhatsApp webhook is working correctly.\n\nMessage received: "${incomingMsg}"\nFrom: ${from} (${userName})\n\nNow try: "show all courses"`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, testResponse);
+          
+          if (result.success) {
+            console.log('✅ Test response sent successfully');
+            return res.status(200).send('OK');
+          } else {
+            console.error('❌ Failed to send test response:', result.error);
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+         
+        // 👋 GREETING HANDLER - Handle basic greetings directly (bypasses Dialogflow)
+        if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
+          console.log('👋 GREETING DETECTED - Sending welcome response');
+          const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
+          
+          if (result.success) {
+            console.log('✅ Greeting response sent successfully');
+            return res.status(200).send('OK');
+          } else {
+            console.error('❌ Failed to send greeting response:', result.error);
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+
+        // 📋 FORM REQUEST HANDLER - Check if user wants registration form
+        const formKeywords = [
+          'form please', 'give form', 'send form', 'form link', 'form url', 
+          'registration form', 'application form', 'enrollment form'
+        ];
+        
+        // 🔍 CHECK IF USER WANTS FORM - Search for form-related keywords in their message
+        const isFormRequest = formKeywords.some(keyword => 
+          incomingMsg.toLowerCase().includes(keyword.toLowerCase())
+        ) || /\bform\b/i.test(incomingMsg);
+
+        // 📝 SEND FORM RESPONSE - If user asked for form or help
+        if (isFormRequest) {
+          console.log('📋 FORM REQUEST DETECTED - Sending registration form link');
+          
+          const formResponse = `📝 *We're here to help you further!*
+
+It seems your query needs special attention. Please fill out the following form so that our team can review your request and get back to you promptly:
+
+🔗 https://iaa-admin-dashboard.vercel.app
+
+Thank you for reaching out to the Indian Aviation Academy!`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, formResponse);
+          
+          if (result.success) {
+            console.log('✅ Form response sent successfully');
+            return res.status(200).send('OK');
+          } else {
+            console.error('❌ Failed to send form response:', result.error);
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+
+        // 🚨 SHOW ALL COURSES COMMAND - Handle when user wants to see all course categories
+        if (incomingMsg.toLowerCase().includes('show all courses') || incomingMsg.toLowerCase().includes('list all courses')) {
+          console.log('🚨 SHOW ALL COURSES COMMAND DETECTED!');
+          
+          try {
+            const response = `🏗️ *IAA Course Categories - Choose a Domain:*\n\n` +
+                            `1️⃣ *Aerodrome Design, Operations, Planning & Engineering*\n` +
+                            `   (19 courses) - Type "domain 1" or "aerodrome"\n\n` +
+                            `2️⃣ *Safety, Security & Compliance*\n` +
+                            `   (5 courses) - Type "domain 2" or "safety"\n\n` +
+                            `3️⃣ *Data Analysis, Decision Making, Innovation & Technology*\n` +
+                            `   (5 courses) - Type "domain 3" or "data"\n\n` +
+                            `4️⃣ *Leadership, Management & Professional Development*\n` +
+                            `   (9 courses) - Type "domain 4" or "leadership"\n\n` +
+                            `5️⃣ *Stakeholder and Contract Management*\n` +
+                            `   (3 courses) - Type "domain 5" or "stakeholder"\n\n` +
+                            `6️⃣ *Financial Management & Auditing*\n` +
+                            `   (4 courses) - Type "domain 6" or "finance"\n\n` +
+                            `\n💡 *How to use:*\n` +
+                            `• Type "domain 1" to see aerodrome courses\n` +
+                            `• Type "domain 2" to see safety courses\n` +
+                            `• Type a course number (e.g., "6" or "course 6")\n` +
+                            `• Type the full course name or part of it\n` +
+                            `• Ask about specific details like fees, dates, or coordinators\n\n` +
+                            `Total domains: 6 | Total courses: 45`;
+            
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            
+            if (result.success) {
+              console.log('✅ Response sent successfully to WhatsApp');
+              return res.status(200).send('OK');
+            } else {
+              console.error('❌ Failed to send response:', result.error);
+              return res.status(500).send('Error sending response');
+            }
+          } catch (error) {
+            console.error('❌ Error showing course categories:', error);
+            const response = `❌ Sorry, I'm having trouble loading the course categories right now. Please try again later.`;
+            
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            
+            if (result.success) {
+              return res.status(200).send('OK');
+            } else {
+              return res.status(500).send('Error sending response');
+            }
+          }
+        }
+
+        // 📚 COURSE NAME RECOGNITION - Handle direct course name searches
+        if (incomingMsg && incomingMsg.trim().length > 3) {
+          try {
+            console.log('🔍 SEARCHING FOR COURSE:', incomingMsg);
+            const courses = require('../data/courses.json');
+            console.log('📊 Total courses loaded:', courses.length);
+            
+            const foundCourse = findCourseByPartialName(incomingMsg, courses);
+            
+            if (foundCourse) {
+              console.log('📚 COURSE FOUND BY NAME:', foundCourse['प्रशिक्षण कार्यक्रम Programme']);
+              const response = formatCourseInfo(foundCourse);
+              
+              const result = await metaApi.sendMessageWithRetry(from, response);
+              
+              if (result.success) {
+                console.log('✅ Course info sent successfully');
+                return res.status(200).send('OK');
+              } else {
+                console.log('❌ Failed to send course info:', result.error);
+                return res.status(500).send('Error sending response');
+              }
+            } else {
+              console.log('❌ NO COURSE FOUND for:', incomingMsg);
+            }
+          } catch (error) {
+            console.error('Error in course name search:', error);
+            // Continue to Dialogflow if course search fails
+          }
+        }
+
+        // 🤖 DIALOGFLOW INTEGRATION - Let AI handle complex queries and course information
+        const userId = normalizeNumber(from);
+        const cacheKey = `dialogflow_${incomingMsg.toLowerCase().trim()}`;
+        
+        // Check cache first for common responses
+        const cachedResponse = getCachedResponse(cacheKey);
+        if (cachedResponse) {
+          console.log('📋 Using cached Dialogflow response');
+          const result = await metaApi.sendMessageWithRetry(from, cachedResponse);
+          if (result.success) {
+            return res.status(200).send('OK');
+          }
+        }
+
+        const request = {
+          session: sessionPath(from),
+          queryInput: {
+            text: {
+              text: incomingMsg,
+              languageCode: 'en',
+            },
+          },
+        };
+
+        console.log('Sending to Dialogflow:', request);
+
+        let dialogflowResponse = 'Sorry, I am having trouble understanding you right now.';
+        
+        // Use request queue to handle concurrent users
+        try {
+          const responses = await processUserRequest(userId, async () => {
+            console.log('Calling Dialogflow with retry logic...');
+            return await retryDialogflowRequest(request);
+          });
+          
+          console.log('Dialogflow response received successfully');
+          
+          if (responses && responses[0] && responses[0].queryResult) {
+            const queryResult = responses[0].queryResult;
+            const intent = queryResult.intent ? queryResult.intent.displayName : null;
+            const confidence = queryResult.intentDetectionConfidence || 0;
+            
+            console.log('Detected intent:', intent);
+            console.log('Confidence score:', confidence);
+            
+            // Handle specific intents
+            if (intent === 'course_info') {
+              dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
+              console.log('🎯 Course info intent detected, using fulfillment text:', dialogflowResponse);
+            } else {
+              dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
+            }
+            
+            console.log('Final Dialogflow response:', dialogflowResponse);
+          } else {
+            dialogflowResponse = 'I received your message but couldn\'t process it properly.';
+          }
+        } catch (err) {
+          console.error('Dialogflow error after retries:', err.message);
+          dialogflowResponse = 'I understand you\'re looking for course information. Please try asking about specific courses or use "show all courses" to see available options.';
+        }
+
+        // 📤 RESPOND TO WHATSAPP VIA META API - Send the final response back to user
+        console.log('🚀 ===== SENDING RESPONSE TO WHATSAPP =====');
+        console.log('📤 Dialogflow response to send:', dialogflowResponse);
+        
+        // Ensure response is not empty or undefined
+        if (!dialogflowResponse || dialogflowResponse.trim() === '') {
+          console.log('⚠️ Warning: Empty response detected, using fallback');
+          dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+        }
+        
+        const result = await metaApi.sendMessageWithRetry(from, dialogflowResponse);
+        
+        if (result.success) {
+          console.log('✅ Dialogflow response sent successfully to WhatsApp!');
+          
+          // Cache successful responses for common queries
+          if (dialogflowResponse && !dialogflowResponse.includes('Sorry') && 
+              !dialogflowResponse.includes('trouble') && dialogflowResponse.length > 50) {
+            setCachedResponse(cacheKey, dialogflowResponse);
+          }
+          
+          console.log('🏁 ===== WEBHOOK COMPLETED =====');
+          return res.status(200).send('OK');
+        } else {
+          console.error('❌ Failed to send Dialogflow response:', result.error);
+          return res.status(500).send('Error sending response');
+        }
       }
       
       // Default response for other POST requests
