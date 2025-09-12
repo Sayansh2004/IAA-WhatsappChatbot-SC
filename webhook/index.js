@@ -58,7 +58,22 @@ const metaApi = require('./meta-api');                // Meta Cloud API integrat
 
 
 const dialogflowProjectId = 'iaa-chatbot-whatsapp-koxw'; // Your Google Cloud project ID
-const dialogflowClient = new SessionsClient();           // Create Dialogflow client
+
+// Initialize Dialogflow client with credentials
+let dialogflowClient;
+try {
+  dialogflowClient = new SessionsClient({
+    credentials: {
+      client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+      private_key: process.env.DIALOGFLOW_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+    projectId: dialogflowProjectId,
+  });
+  console.log('✅ Dialogflow client initialized');
+} catch (error) {
+  console.error('❌ Dialogflow client initialization failed:', error);
+  dialogflowClient = null;
+}
 
 // 🔄 CONCURRENT USER MANAGEMENT SYSTEM
 // This system prevents multiple users from interfering with each other when contacting the chatbot simultaneously
@@ -1206,9 +1221,8 @@ function formatCourseInfo(course) {
          `🏨 *Hostel Charges:* ₹${course['Hostel Charges'] || 'Not available'}\n` +
          `👨‍🏫 *Coordinator(s):* ${course['पाठ्यक्रम समन्वयक Course Coordinator']}\n` +
          `🏷️ *Category:* ${course['श्रेणी Category']}\n` +
-         `📞 *Contact:* ${course['Phone number'] || 'Not available'}\n` 
-         `📧 *Email:* ${course['email'] || 'Not available'}\n\n` 
-         ;
+         `📞 *Contact:* ${course['Phone number'] || 'Not available'}\n` +
+         `📧 *Email:* ${course['email'] || 'Not available'}\n\n`;
 }
 
 // 🔍 FIND COURSE BY NAME - Search for a course using its full name (case-insensitive)
@@ -1520,35 +1534,40 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         
         // Use request queue to handle concurrent users
         try {
-          const responses = await processUserRequest(userId, async () => {
-            console.log('Calling Dialogflow with retry logic...');
-            return await retryDialogflowRequest(request);
-          });
-          
-          console.log('Dialogflow response received successfully');
-          
-          if (responses && responses[0] && responses[0].queryResult) {
-            const queryResult = responses[0].queryResult;
-            const intent = queryResult.intent ? queryResult.intent.displayName : null;
-            const confidence = queryResult.intentDetectionConfidence || 0;
-            
-            console.log('Detected intent:', intent);
-            console.log('Confidence score:', confidence);
-            
-            // Handle specific intents
-            if (intent === 'course_info') {
-              dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
-              console.log('🎯 Course info intent detected, using fulfillment text:', dialogflowResponse);
-            } else if (intent === 'Default Fallback Intent') {
-              // Handle fallback intent with better response
-              dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
-            } else {
-              dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
-            }
-            
-            console.log('Final Dialogflow response:', dialogflowResponse);
+          if (!dialogflowClient) {
+            console.log('❌ Dialogflow client not available, using fallback');
+            dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
           } else {
-            dialogflowResponse = 'I received your message but couldn\'t process it properly.';
+            const responses = await processUserRequest(userId, async () => {
+              console.log('Calling Dialogflow with retry logic...');
+              return await retryDialogflowRequest(request);
+            });
+            
+            console.log('Dialogflow response received successfully');
+            
+            if (responses && responses[0] && responses[0].queryResult) {
+              const queryResult = responses[0].queryResult;
+              const intent = queryResult.intent ? queryResult.intent.displayName : null;
+              const confidence = queryResult.intentDetectionConfidence || 0;
+              
+              console.log('Detected intent:', intent);
+              console.log('Confidence score:', confidence);
+              
+              // Handle specific intents
+              if (intent === 'course_info') {
+                dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
+                console.log('🎯 Course info intent detected, using fulfillment text:', dialogflowResponse);
+              } else if (intent === 'Default Fallback Intent') {
+                // Handle fallback intent with better response
+                dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+              } else {
+                dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
+              }
+              
+              console.log('Final Dialogflow response:', dialogflowResponse);
+            } else {
+              dialogflowResponse = 'I received your message but couldn\'t process it properly.';
+            }
           }
         } catch (err) {
           console.error('Dialogflow error after retries:', err.message);
