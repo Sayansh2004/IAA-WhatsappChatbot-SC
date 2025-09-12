@@ -144,6 +144,25 @@ async function handleWebhook(req, res) {
       const body = req.body;
       console.log('📨 Incoming message:', JSON.stringify(body, null, 2));
       
+      // Check if this is a Dialogflow webhook call
+      if (body.responseId && body.queryResult) {
+        console.log('🤖 Dialogflow webhook call detected');
+        const intent = body.queryResult.intent?.displayName || 'Default Fallback Intent';
+        const fulfillmentText = body.queryResult.fulfillmentText || '';
+        
+        console.log(`🎯 Intent detected: ${intent}`);
+        
+        // Return proper Dialogflow webhook response
+        return res.status(200).json({
+          fulfillmentText: fulfillmentText,
+          fulfillmentMessages: [{
+            text: {
+              text: [fulfillmentText]
+            }
+          }]
+        });
+      }
+      
       if (body.object === 'whatsapp_business_account') {
         for (const entry of body.entry) {
           for (const change of entry.changes) {
