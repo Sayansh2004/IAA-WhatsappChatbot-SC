@@ -2,7 +2,7 @@
 // This file serves as the entry point for Vercel's serverless functions
 // It handles all incoming webhook requests from Meta WhatsApp Business API
 
-const { handleWebhook } = require('../webhook/index.js');
+const { handleWebhook } = require('./webhook/index.js');
 
 // Export the handler function for Vercel
 module.exports = async (req, res) => {
