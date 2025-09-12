@@ -1353,7 +1353,7 @@ const handleWebhook = async (req, res) => {
         // 👋 GREETING HANDLER - Handle basic greetings directly (bypasses Dialogflow)
         if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
           console.log('👋 GREETING DETECTED - Sending welcome response');
-          const greetingResponse = `👋 *Hello! I'm the IAA Chatbot.*\n\nI can help you with:\n• Course information\n• Registration details\n• Training programs\n\n💡 *Try saying:*\n• "show all courses"\n• "domain 1"\n• Ask about specific courses\n\nHow can I assist you today?`;
+          const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
           
           const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
           
@@ -1450,7 +1450,15 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         }
 
         // 📚 COURSE NAME RECOGNITION - Handle direct course name searches FIRST
-        if (incomingMsg && incomingMsg.trim().length > 2) {
+        // Skip course search for greetings and commands
+        if (incomingMsg && 
+            incomingMsg.trim().length > 2 && 
+            !incomingMsg.toLowerCase().includes('show all courses') &&
+            !incomingMsg.toLowerCase().includes('domain') &&
+            incomingMsg.toLowerCase() !== 'hi' &&
+            incomingMsg.toLowerCase() !== 'hello' &&
+            incomingMsg.toLowerCase() !== 'hey') {
+          
           try {
             console.log('🔍 SEARCHING FOR COURSE:', incomingMsg);
             const courses = require('../data/courses.json');
