@@ -224,6 +224,9 @@ async function handleWebhook(req, res) {
                   
                     // Send response
                     if (response) {
+                      console.log('🔍 About to send message:', response.substring(0, 100) + '...');
+                      console.log('🔍 Using META_PHONE_NUMBER_ID:', env.META_PHONE_NUMBER_ID);
+                      console.log('🔍 Using META_ACCESS_TOKEN:', env.META_ACCESS_TOKEN ? 'SET' : 'NOT SET');
                       await sendMessage(phoneNumber, response, env);
                       console.log(`✅ Response sent to ${phoneNumber}`);
                     }
