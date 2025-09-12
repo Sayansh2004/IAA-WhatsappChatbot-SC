@@ -1312,7 +1312,9 @@ const handleWebhook = async (req, res) => {
             text: {
               text: [fulfillmentText]
             }
-          }]
+          }],
+          outputContexts: [],
+          followupEventInput: null
         });
       }
       
