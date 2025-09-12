@@ -88,6 +88,18 @@ async function handleWebhook(req, res) {
       console.log('🔍 Debug - Expected token:', META_WEBHOOK_VERIFY_TOKEN);
       console.log('🔍 Debug - Challenge:', challenge);
       
+      // If no webhook parameters, return success message for browser visits
+      if (!mode && !token && !challenge) {
+        console.log('🌐 Browser visit detected');
+        return res.status(200).json({
+          status: 'success',
+          message: 'IAA WhatsApp Chatbot Webhook is running!',
+          timestamp: new Date().toISOString(),
+          environment: process.env.NODE_ENV || 'development'
+        });
+      }
+      
+      // Meta webhook verification
       if (mode === 'subscribe' && token === META_WEBHOOK_VERIFY_TOKEN) {
         console.log('✅ Webhook verified');
         return res.status(200).send(challenge);
@@ -95,7 +107,16 @@ async function handleWebhook(req, res) {
         console.log('❌ Webhook verification failed');
         console.log('❌ Mode match:', mode === 'subscribe');
         console.log('❌ Token match:', token === META_WEBHOOK_VERIFY_TOKEN);
-        return res.status(403).send('Forbidden');
+        return res.status(403).json({
+          error: 'Forbidden',
+          message: 'Webhook verification failed',
+          debug: {
+            mode: mode,
+            tokenReceived: token,
+            tokenExpected: META_WEBHOOK_VERIFY_TOKEN,
+            challenge: challenge
+          }
+        });
       }
     }
     
