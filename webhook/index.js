@@ -1279,7 +1279,20 @@ const handleWebhook = async (req, res) => {
 
   // Handle POST requests (incoming messages)
   if (req.method === 'POST') {
-    return await handleIncomingMessage(req, res);
+    // Check if this is a Meta webhook (WhatsApp messages)
+    if (req.body && req.body.object === 'whatsapp_business_account') {
+      // Route to Meta webhook handler
+      return await app._router.handle(req, res);
+    }
+    
+    // Check if this is a Dialogflow webhook
+    if (req.body && req.body.responseId && req.body.queryResult) {
+      // Route to Dialogflow webhook handler
+      return await app._router.handle(req, res);
+    }
+    
+    // Default response for other POST requests
+    return res.status(200).json({ message: 'Webhook received' });
   }
 
   // Handle other methods
