@@ -83,11 +83,18 @@ async function handleWebhook(req, res) {
       const token = req.query['hub.verify_token'];
       const challenge = req.query['hub.challenge'];
       
+      console.log('🔍 Debug - Mode:', mode);
+      console.log('🔍 Debug - Token received:', token);
+      console.log('🔍 Debug - Expected token:', META_WEBHOOK_VERIFY_TOKEN);
+      console.log('🔍 Debug - Challenge:', challenge);
+      
       if (mode === 'subscribe' && token === META_WEBHOOK_VERIFY_TOKEN) {
         console.log('✅ Webhook verified');
         return res.status(200).send(challenge);
       } else {
         console.log('❌ Webhook verification failed');
+        console.log('❌ Mode match:', mode === 'subscribe');
+        console.log('❌ Token match:', token === META_WEBHOOK_VERIFY_TOKEN);
         return res.status(403).send('Forbidden');
       }
     }
