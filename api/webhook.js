@@ -1,4 +1,4 @@
-// 🚀 VERCEL SERVERLESS FUNCTION - IAA WhatsApp Chatbot Webhook
+// 🚀 VERCEL SERVERLESS FUNCTION - IAA WhatsApp Chatbot Webhook (v2.0)
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
