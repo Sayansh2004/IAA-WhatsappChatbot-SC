@@ -1247,14 +1247,46 @@ function findCourseByPartialName(partialName, courses) {
   const lowerCasePartial = partialName.toLowerCase().trim();
   console.log('🔍 Searching for:', lowerCasePartial);
   
-  // Loop through all courses to find a match
+  // First pass: Look for exact word matches (highest priority)
   for (const course of courses) {
-    const courseName = course['प्रशिक्षण कार्यक्रम Programme'].toLowerCase();
-    console.log('🔍 Checking course:', courseName);
+    const courseName = course['प्रशिक्षण कार्यक्रम Programme'];
+    if (!courseName) continue;
+    
+    const lowerCourseName = courseName.toLowerCase();
+    console.log('🔍 Checking course:', lowerCourseName);
+    
+    // Check for exact word match using word boundaries
+    const wordBoundaryRegex = new RegExp(`\\b${lowerCasePartial}\\b`, 'i');
+    if (wordBoundaryRegex.test(courseName)) {
+      console.log('✅ EXACT WORD MATCH FOUND:', courseName);
+      return course;
+    }
+  }
+  
+  // Second pass: Look for exact substring matches (medium priority)
+  for (const course of courses) {
+    const courseName = course['प्रशिक्षण कार्यक्रम Programme'];
+    if (!courseName) continue;
+    
+    const lowerCourseName = courseName.toLowerCase();
+    
+    // Check if the course name starts with the search term
+    if (lowerCourseName.startsWith(lowerCasePartial)) {
+      console.log('✅ STARTS WITH MATCH FOUND:', courseName);
+      return course;
+    }
+  }
+  
+  // Third pass: Look for any substring matches (lowest priority)
+  for (const course of courses) {
+    const courseName = course['प्रशिक्षण कार्यक्रम Programme'];
+    if (!courseName) continue;
+    
+    const lowerCourseName = courseName.toLowerCase();
     
     // Check if the course name contains the search term
-    if (courseName.includes(lowerCasePartial)) {
-      console.log('✅ MATCH FOUND:', courseName);
+    if (lowerCourseName.includes(lowerCasePartial)) {
+      console.log('✅ SUBSTRING MATCH FOUND:', courseName);
       return course;
     }
   }
@@ -1465,6 +1497,27 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           }
         }
 
+        // 🎉 GOODBYE DETECTION - Handle goodbye messages first
+        const goodbyeKeywords = ['bye', 'goodbye', 'farewell', 'see you', 'take care', 'thanks', 'thank you', 'tata', 'chao', 'adios'];
+        const isGoodbyeMessage = goodbyeKeywords.some(keyword => 
+          incomingMsg.toLowerCase().includes(keyword.toLowerCase())
+        );
+        
+        if (isGoodbyeMessage) {
+          console.log('🎉 GOODBYE DETECTED - Sending farewell response');
+          const goodbyeResponse = `🎉 *Thank you for contacting Indian Aviation Academy!*\n\n✨ *Happy to serve you, ${userName}!* ✨\n\n🌟 *Hope you had a smooth interaction with me!* 🌟\n\n📚 *Remember:*\n• I'm always here to help with course information\n• Feel free to ask about any training programs\n• Contact us anytime for assistance\n\n🚀 *Wishing you success in your aviation journey!*\n\n*Best regards,*\n*IAA Support Team* 🛩️\n\n*--- End of Conversation ---*`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, goodbyeResponse);
+          
+          if (result.success) {
+            console.log('✅ Goodbye response sent successfully');
+            return res.status(200).send('OK');
+          } else {
+            console.error('❌ Failed to send goodbye response:', result.error);
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+
         // 📚 COURSE NAME RECOGNITION - Handle direct course name searches FIRST
         // Skip course search for greetings and commands
         if (incomingMsg && 
@@ -1473,7 +1526,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             !incomingMsg.toLowerCase().includes('domain') &&
             incomingMsg.toLowerCase() !== 'hi' &&
             incomingMsg.toLowerCase() !== 'hello' &&
-            incomingMsg.toLowerCase() !== 'hey') {
+            incomingMsg.toLowerCase() !== 'hey' &&
+            !isGoodbyeMessage) {
           
           try {
             console.log('🔍 SEARCHING FOR COURSE:', incomingMsg);
