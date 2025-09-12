@@ -84,8 +84,10 @@ async function handleWebhook(req, res) {
       const challenge = req.query['hub.challenge'];
       
       console.log('🔍 Debug - Mode:', mode);
-      console.log('🔍 Debug - Token received:', token);
-      console.log('🔍 Debug - Expected token:', META_WEBHOOK_VERIFY_TOKEN);
+      console.log('🔍 Debug - Token received:', JSON.stringify(token));
+      console.log('🔍 Debug - Expected token:', JSON.stringify(META_WEBHOOK_VERIFY_TOKEN));
+      console.log('🔍 Debug - Token length received:', token ? token.length : 'undefined');
+      console.log('🔍 Debug - Token length expected:', META_WEBHOOK_VERIFY_TOKEN ? META_WEBHOOK_VERIFY_TOKEN.length : 'undefined');
       console.log('🔍 Debug - Challenge:', challenge);
       
       // If no webhook parameters, return success message for browser visits
