@@ -1261,42 +1261,123 @@ app.listen(PORT, () => {
 
 // Export the webhook handler for Vercel serverless function
 const handleWebhook = async (req, res) => {
-  // Handle GET requests (webhook verification)
-  if (req.method === 'GET') {
-    const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || 'iaa_chatbot_verify_token_2024';
-    const mode = req.query['hub.mode'];
-    const token = req.query['hub.verify_token'];
-    const challenge = req.query['hub.challenge'];
-
-    if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
-      console.log('✅ Webhook verified successfully');
-      return res.status(200).send(challenge);
-    } else {
-      console.log('❌ Webhook verification failed');
-      return res.status(403).send('Forbidden');
-    }
-  }
-
-  // Handle POST requests (incoming messages)
-  if (req.method === 'POST') {
-    // Check if this is a Meta webhook (WhatsApp messages)
-    if (req.body && req.body.object === 'whatsapp_business_account') {
-      // Route to Meta webhook handler
-      return await app._router.handle(req, res);
+  try {
+    console.log('🚀 Vercel webhook function called');
+    console.log('Method:', req.method);
+    console.log('URL:', req.url);
+    
+    // Set CORS headers for cross-origin requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Handle preflight OPTIONS requests
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
     }
     
-    // Check if this is a Dialogflow webhook
-    if (req.body && req.body.responseId && req.body.queryResult) {
-      // Route to Dialogflow webhook handler
-      return await app._router.handle(req, res);
-    }
-    
-    // Default response for other POST requests
-    return res.status(200).json({ message: 'Webhook received' });
-  }
+    // Handle GET requests (webhook verification)
+    if (req.method === 'GET') {
+      const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || 'iaa_chatbot_verify_token_2024';
+      const mode = req.query['hub.mode'];
+      const token = req.query['hub.verify_token'];
+      const challenge = req.query['hub.challenge'];
 
-  // Handle other methods
-  return res.status(405).send('Method Not Allowed');
+      if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
+        console.log('✅ Webhook verified successfully');
+        return res.status(200).send(challenge);
+      } else {
+        console.log('❌ Webhook verification failed');
+        return res.status(403).send('Forbidden');
+      }
+    }
+
+    // Handle POST requests (incoming messages)
+    if (req.method === 'POST') {
+      console.log('📨 Incoming POST request');
+      
+      // Check if this is a Meta webhook (WhatsApp messages)
+      if (req.body && req.body.object === 'whatsapp_business_account') {
+        console.log('📱 Meta webhook detected');
+        
+        // Process the webhook data
+        const messageData = metaApi.processIncomingMessage(req.body);
+        
+        if (!messageData) {
+          console.log('ℹ️ No valid message found in webhook data');
+          return res.status(200).send('OK');
+        }
+        
+        const incomingMsg = messageData.text;
+        const from = messageData.from;
+        const userName = messageData.name;
+        
+        console.log('💬 Processing message:', incomingMsg);
+        console.log('👤 From:', from, `(${userName})`);
+        
+        // Handle greeting
+        if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
+          console.log('👋 GREETING DETECTED');
+          const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
+          
+          if (result.success) {
+            console.log('✅ Greeting response sent successfully');
+            return res.status(200).send('OK');
+          } else {
+            console.error('❌ Failed to send greeting response:', result.error);
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+        
+        // For other messages, send a simple response
+        const response = `👋 *Hello! I'm the IAA Chatbot.*\n\nI can help you with:\n• Course information\n• Registration details\n• Training programs\n\n💡 *Try saying:*\n• "show all courses"\n• "domain 1"\n• Ask about specific courses\n\nHow can I assist you today?`;
+        
+        const result = await metaApi.sendMessageWithRetry(from, response);
+        
+        if (result.success) {
+          console.log('✅ Response sent successfully');
+          return res.status(200).send('OK');
+        } else {
+          console.error('❌ Failed to send response:', result.error);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+      }
+      
+      // Check if this is a Dialogflow webhook
+      if (req.body && req.body.responseId && req.body.queryResult) {
+        console.log('🤖 Dialogflow webhook detected');
+        const intent = req.body.queryResult.intent?.displayName || 'Default Fallback Intent';
+        const fulfillmentText = req.body.queryResult.fulfillmentText || '';
+        
+        console.log(`🎯 Intent detected: ${intent}`);
+        
+        // Return proper Dialogflow webhook response
+        return res.status(200).json({
+          fulfillmentText: fulfillmentText,
+          fulfillmentMessages: [{
+            text: {
+              text: [fulfillmentText]
+            }
+          }]
+        });
+      }
+      
+      // Default response for other POST requests
+      return res.status(200).json({ message: 'Webhook received' });
+    }
+
+    // Handle other methods
+    return res.status(405).send('Method Not Allowed');
+    
+  } catch (error) {
+    console.error('❌ Vercel webhook function error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      message: 'Webhook processing failed'
+    });
+  }
 };
 
 module.exports = { app, handleWebhook };
