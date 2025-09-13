@@ -1387,8 +1387,229 @@ const handleWebhook = async (req, res) => {
         console.log('🤖 Dialogflow webhook detected');
         const intent = req.body.queryResult.intent?.displayName || 'Default Fallback Intent';
         const fulfillmentText = req.body.queryResult.fulfillmentText || '';
+        const queryText = req.body.queryResult.queryText || '';
         
         console.log(`🎯 Intent detected: ${intent}`);
+        console.log(`🔍 Query text: ${queryText}`);
+        
+        // 🎯 INTERCEPT FALLBACK FOR NUMBERS - Check if this is a fallback for a number that should be handled by our custom logic
+        if (intent === 'Default Fallback Intent' && queryText) {
+          const numberMatch = queryText.match(/^(course\s*)?(\d+)$/i);
+          const domainMatch = queryText.toLowerCase().match(/^domain\s*(\d+)$/i);
+          
+          if (numberMatch || domainMatch) {
+            console.log('🔢 INTERCEPTING FALLBACK FOR NUMBER - Processing with custom logic');
+            console.log('🔍 DEBUG - queryText:', JSON.stringify(queryText));
+            console.log('🔍 DEBUG - numberMatch:', numberMatch);
+            console.log('🔍 DEBUG - domainMatch:', domainMatch);
+            
+            // Extract the number
+            const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
+            console.log('🔍 DEBUG - courseNumber:', courseNumber);
+            
+            // Get session info to extract user phone number
+            const session = req.body.session || '';
+            const phoneMatch = session.match(/sessions\/(\d+)/);
+            const from = phoneMatch ? phoneMatch[1] : null;
+            
+            if (from) {
+              console.log('🔍 DEBUG - extracted phone:', from);
+              
+              // Check user context first for course number selection
+              const userId = normalizeNumber(from);
+              const userContextData = userContext.get(userId);
+              const contextAge = userContextData ? Date.now() - userContextData.timestamp : Infinity;
+              const isRecentContext = contextAge < 300000; // 5 minutes context validity
+              
+              if (userContextData && isRecentContext && courseNumber >= 1 && courseNumber <= userContextData.courses.length) {
+                console.log(`📚 COURSE NUMBER WITHIN DOMAIN CONTEXT - Domain ${userContextData.domainNumber}, Course ${courseNumber}`);
+                
+                try {
+                  // Find the course in the database by name
+                  const courses = require('../data/courses.json');
+                  const selectedCourseName = userContextData.courses[courseNumber - 1];
+                  const selectedCourse = findCourseByName(selectedCourseName, courses);
+                  
+                  if (selectedCourse) {
+                    const response = formatCourseInfo(selectedCourse);
+                    
+                    const result = await metaApi.sendMessageWithRetry(from, response);
+                    
+                    if (result.success) {
+                      console.log('✅ Course details sent successfully');
+                      return res.status(200).json({
+                        fulfillmentText: response,
+                        fulfillmentMessages: [{
+                          text: {
+                            text: [response]
+                          }
+                        }],
+                        outputContexts: [],
+                        followupEventInput: null
+                      });
+                    }
+                  } else {
+                    const response = `❌ Sorry, I couldn't find detailed information for "${selectedCourseName}" in our database. Please contact support.`;
+                    
+                    const result = await metaApi.sendMessageWithRetry(from, response);
+                    
+                    if (result.success) {
+                      return res.status(200).json({
+                        fulfillmentText: response,
+                        fulfillmentMessages: [{
+                          text: {
+                            text: [response]
+                          }
+                        }],
+                        outputContexts: [],
+                        followupEventInput: null
+                      });
+                    }
+                  }
+                } catch (error) {
+                  console.error('Error loading course for context-based selection:', error);
+                  const response = `❌ Sorry, I'm having trouble loading the course information right now. Please try again later.`;
+                  
+                  const result = await metaApi.sendMessageWithRetry(from, response);
+                  
+                  if (result.success) {
+                    return res.status(200).json({
+                      fulfillmentText: response,
+                      fulfillmentMessages: [{
+                        text: {
+                          text: [response]
+                        }
+                      }],
+                      outputContexts: [],
+                      followupEventInput: null
+                    });
+                  }
+                }
+              }
+              // Check if this is a domain selection (1-6)
+              else if ((courseNumber >= 1 && courseNumber <= 6 && queryText.length === 1) || domainMatch) {
+                console.log('🏷️ DOMAIN SELECTION DETECTED IN DIALOGFLOW FALLBACK');
+                
+                // Process domain selection directly
+                const domainNumber = courseNumber;
+                
+                const domainDefinitions = {
+                  1: {
+                    name: "Aerodrome Design, Operations, Planning & Engineering",
+                    courses: [
+                      "Global Reporting Format",
+                      "Basic Principles of Aerodrome Safeguarding (NOC)",
+                      "Airport Emergency Planning & Disabled Aircraft Removal",
+                      "Infrastructure and Facilities for Passengers with Reduced Mobilities",
+                      "Aircraft Classification Rating – Pavement",
+                      "Aeronautical Ground Lights (AGL)",
+                      "Runway Rubber Removal (RRR)",
+                      "Aerodrome Design & Operations (Annex-14)",
+                      "Aerodrome Licensing",
+                      "Airfield Pavement Marking (APM)",
+                      "Wildlife Hazard Management",
+                      "Airfield Signs",
+                      "Passenger Wayfinding Signages (PWS)",
+                      "Airport Pavement Design, Evaluation & Maintenance",
+                      "Aerodrome Planning (Greenfield/Brownfield Airport)",
+                      "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
+                      "Airport Terminal Management",
+                      "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
+                      "Aviation Sustainability and Green Technology"
+                    ]
+                  },
+                  2: {
+                    name: "Safety, Security & Compliance",
+                    courses: [
+                      "Safety Management System (SMS)",
+                      "Aviation Security Management",
+                      "Aircraft Accident Investigation",
+                      "Emergency Response Planning",
+                      "Regulatory Compliance"
+                    ]
+                  },
+                  3: {
+                    name: "Data Analysis, Decision Making, Innovation & Technology",
+                    courses: [
+                      "Data Analytics for Aviation",
+                      "Decision Support Systems",
+                      "Innovation Management",
+                      "Technology Integration",
+                      "Digital Transformation"
+                    ]
+                  },
+                  4: {
+                    name: "Leadership, Management & Professional Development",
+                    courses: [
+                      "Aviation Leadership",
+                      "Strategic Management",
+                      "Team Building",
+                      "Communication Skills",
+                      "Project Management",
+                      "Change Management",
+                      "Performance Management",
+                      "Conflict Resolution",
+                      "Professional Development"
+                    ]
+                  },
+                  5: {
+                    name: "Stakeholder and Contract Management",
+                    courses: [
+                      "Stakeholder Engagement",
+                      "Contract Management",
+                      "Vendor Management"
+                    ]
+                  },
+                  6: {
+                    name: "Financial Management & Auditing",
+                    courses: [
+                      "Aviation Finance",
+                      "Budget Management",
+                      "Financial Auditing",
+                      "Cost Control"
+                    ]
+                  }
+                };
+                
+                const domain = domainDefinitions[domainNumber];
+                if (domain) {
+                  const courseList = domain.courses.map((course, idx) => 
+                    `${idx + 1}. ${course}`
+                  ).join('\n\n');
+                  
+                  // Store user context
+                  userContext.set(userId, {
+                    domainNumber: domainNumber,
+                    domainName: domain.name,
+                    courses: domain.courses,
+                    timestamp: Date.now()
+                  });
+                  
+                  const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+                  
+                  // Send response via Meta API
+                  const result = await metaApi.sendMessageWithRetry(from, response);
+                  
+                  if (result.success) {
+                    console.log('✅ Domain selection response sent successfully');
+                    return res.status(200).json({
+                      fulfillmentText: response,
+                      fulfillmentMessages: [{
+                        text: {
+                          text: [response]
+                        }
+                      }],
+                      outputContexts: [],
+                      followupEventInput: null
+                    });
+                  } else {
+                    console.log('❌ Failed to send domain selection response');
+                  }
+                }
+              }
+            }
+          }
+        }
         
         // Return proper Dialogflow webhook response
         return res.status(200).json({
