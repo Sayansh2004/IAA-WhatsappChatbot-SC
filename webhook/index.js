@@ -85,6 +85,9 @@ const responseCache = new Map(); // Cache common responses to reduce Dialogflow 
 const MAX_RETRIES = 3; // Maximum retry attempts for Dialogflow API calls when rate limited
 const RETRY_DELAY = 1000; // Base delay between retries (1 second) - will increase exponentially
 
+// 🎯 USER CONTEXT MANAGEMENT - Track user's current domain selection for course number handling
+const userContext = new Map(); // Store user's current domain context for course number selection
+
 // Utility to normalize phone number (remove "whatsapp:" and keep only digits)
 const normalizeNumber = (num) => {
   return num.replace(/\D/g, '');
@@ -433,9 +436,58 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       
       // Check if this is a single digit 1-6 (domain selection) or course number
       const courseNumber = parseInt(numberMatch[2]);
+      const userId = normalizeNumber(from);
       
+      // 🎯 CHECK USER CONTEXT FIRST - If user recently selected a domain, treat number as course selection
+      const userContextData = userContext.get(userId);
+      const contextAge = userContextData ? Date.now() - userContextData.timestamp : Infinity;
+      const isRecentContext = contextAge < 300000; // 5 minutes context validity
+      
+      if (userContextData && isRecentContext && courseNumber >= 1 && courseNumber <= userContextData.courses.length) {
+        console.log(`📚 COURSE NUMBER WITHIN DOMAIN CONTEXT - Domain ${userContextData.domainNumber}, Course ${courseNumber}`);
+        
+        try {
+          // Find the course in the database by name
+          const courses = require('../data/courses.json');
+          const selectedCourseName = userContextData.courses[courseNumber - 1];
+          const selectedCourse = findCourseByName(selectedCourseName, courses);
+          
+          if (selectedCourse) {
+            const response = formatCourseInfo(selectedCourse);
+            
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            
+            if (result.success) {
+              return res.status(200).send('OK');
+            } else {
+              return res.status(500).send('Error sending response');
+            }
+          } else {
+            const response = `❌ Sorry, I couldn't find detailed information for "${selectedCourseName}" in our database. Please contact support.`;
+            
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            
+            if (result.success) {
+              return res.status(200).send('OK');
+            } else {
+              return res.status(500).send('Error sending response');
+            }
+          }
+        } catch (error) {
+          console.error('Error loading course for context-based selection:', error);
+          const response = `❌ Sorry, I'm having trouble loading the course information right now. Please try again later.`;
+          
+          const result = await metaApi.sendMessageWithRetry(from, response);
+          
+          if (result.success) {
+            return res.status(200).send('OK');
+          } else {
+            return res.status(500).send('Error sending response');
+          }
+        }
+      }
       // 🎯 DOMAIN VS COURSE LOGIC - Single digits 1-6 are domains, others are course numbers
-      if (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) {
+      else if (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) {
         console.log('🏷️ DOMAIN SELECTION DETECTED - Letting Dialogflow handle domain selection');
         // This is a domain selection, not a course number
         // Let it fall through to domain handling in Dialogflow
@@ -665,6 +717,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       console.log('Message:', incomingMsg);
       console.log('From:', from);
       
+      // 🎯 CLEAR USER CONTEXT - Reset domain context when user goes back to main menu
+      const userId = normalizeNumber(from);
+      userContext.delete(userId);
+      
       // Check cache first for show all courses response
       const showAllCacheKey = 'show_all_courses';
       const cachedShowAll = getCachedResponse(showAllCacheKey);
@@ -851,7 +907,16 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             `${idx + 1}. ${course}`
           ).join('\n\n');
 
-          const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "6" or "course 6")\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+          // 🎯 STORE USER CONTEXT - Remember which domain user selected for course number handling
+          const userId = normalizeNumber(from);
+          userContext.set(userId, {
+            domainNumber: domainNumber,
+            domainName: domain.name,
+            courses: domain.courses,
+            timestamp: Date.now()
+          });
+
+          const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
           
           const result = await metaApi.sendMessageWithRetry(from, response);
           
@@ -1451,6 +1516,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         // 🚨 SHOW ALL COURSES COMMAND - Handle when user wants to see all course categories
         if (incomingMsg.toLowerCase().includes('show all courses') || incomingMsg.toLowerCase().includes('list all courses')) {
           console.log('🚨 SHOW ALL COURSES COMMAND DETECTED!');
+          
+          // 🎯 CLEAR USER CONTEXT - Reset domain context when user goes back to main menu
+          const userId = normalizeNumber(from);
+          userContext.delete(userId);
           
           try {
             const response = `🏗️ *IAA Course Categories - Choose a Domain:*\n\n` +
