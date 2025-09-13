@@ -1170,8 +1170,12 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                              dialogflowResponse.includes('couldn\'t process it properly') ||
                              dialogflowResponse.includes('I understand you\'re looking for');
     
+    // 🎯 CHECK IF MESSAGE IS A NUMBER - Don't show fallback form for numbers (could be course selection)
+    const isNumberMessage = /^\d+$/.test(incomingMsg.trim());
+    
     if (isGenericResponse && !incomingMsg.toLowerCase().includes('course') && 
-        !incomingMsg.toLowerCase().includes('show') && !incomingMsg.toLowerCase().includes('domain')) {
+        !incomingMsg.toLowerCase().includes('show') && !incomingMsg.toLowerCase().includes('domain') &&
+        !isNumberMessage) {
       
       const smartFormResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
       
