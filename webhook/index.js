@@ -488,9 +488,123 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       }
       // 🎯 DOMAIN VS COURSE LOGIC - Single digits 1-6 are domains, others are course numbers
       else if (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) {
-        console.log('🏷️ DOMAIN SELECTION DETECTED - Letting Dialogflow handle domain selection');
+        console.log('🏷️ DOMAIN SELECTION DETECTED - Processing domain selection directly');
         // This is a domain selection, not a course number
-        // Let it fall through to domain handling in Dialogflow
+        // Process domain selection directly here instead of falling through
+        try {
+          const domainDefinitions = {
+            1: {
+              name: "Aerodrome Design, Operations, Planning & Engineering",
+              courses: [
+                "Global Reporting Format",
+                "Basic Principles of Aerodrome Safeguarding (NOC)",
+                "Airport Emergency Planning & Disabled Aircraft Removal",
+                "Infrastructure and Facilities for Passengers with Reduced Mobilities",
+                "Aircraft Classification Rating – Pavement",
+                "Aeronautical Ground Lights (AGL)",
+                "Runway Rubber Removal (RRR)",
+                "Aerodrome Design & Operations (Annex-14)",
+                "Aerodrome Licensing",
+                "Airfield Pavement Marking (APM)",
+                "Wildlife Hazard Management",
+                "Airfield Signs",
+                "Passenger Wayfinding Signages (PWS)",
+                "Airport Pavement Design, Evaluation & Maintenance",
+                "Aerodrome Planning (Greenfield/Brownfield Airport)",
+                "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
+                "Airport Terminal Management",
+                "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
+                "Aviation Sustainability and Green Technology"
+              ]
+            },
+            2: {
+              name: "Safety, Security & Compliance",
+              courses: [
+                "Safety Management System (SMS)",
+                "Aviation Cyber Security",
+                "Annex-9 (Facilitation)",
+                "Prevention of Sexual Harassment (POSH)",
+                "Compliance of Labour Laws"
+              ]
+            },
+            3: {
+              name: "Data Analysis, Decision Making, Innovation & Technology",
+              courses: [
+                "Data Analytics Using Power BI",
+                "Advance Excel & Power BI",
+                "Design Thinking for Nurturing Innovation",
+                "Data-Driven Decision Making",
+                "System Engineering and Project Management"
+              ]
+            },
+            4: {
+              name: "Leadership, Management & Professional Development",
+              courses: [
+                "Planning for Retirement",
+                "Stress Management",
+                "Human Factors",
+                "Mentorship and Succession Planning",
+                "Good to Great – Mid-Career Transition",
+                "Corporate Communication",
+                "APD Professional Competency Development",
+                "Leadership, Team Building & Conflict Management",
+                "Effective Presentation"
+              ]
+            },
+            5: {
+              name: "Stakeholder and Contract Management",
+              courses: [
+                "Industrial Relations and Stakeholder Management",
+                "Contract Management",
+                "Commercial Contract Management"
+              ]
+            },
+            6: {
+              name: "Financial Management & Auditing",
+              courses: [
+                "Delegation of Power & Budget Preparation",
+                "GeM Procurement",
+                "Right to Information Act, 2005",
+                "Goods and Services Tax & Statutory Taxation",
+                "Accounting & Internal Audit"
+              ]
+            }
+          };
+
+          const domain = domainDefinitions[courseNumber];
+          if (domain) {
+            const courseList = domain.courses.map((course, idx) => 
+              `${idx + 1}. ${course}`
+            ).join('\n\n');
+
+            // 🎯 STORE USER CONTEXT - Remember which domain user selected for course number handling
+            userContext.set(userId, {
+              domainNumber: courseNumber,
+              domainName: domain.name,
+              courses: domain.courses,
+              timestamp: Date.now()
+            });
+
+            const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+            
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            
+            if (result.success) {
+              return res.status(200).send('OK');
+            } else {
+              return res.status(500).send('Error sending response');
+            }
+          } else {
+            const response = `❌ Sorry, domain ${courseNumber} not found. Please try "show all courses" to see available domains.`;
+            const result = await metaApi.sendMessageWithRetry(from, response);
+            return res.status(200).send('OK');
+          }
+        } catch (error) {
+          console.error('Error processing domain selection:', error);
+          const response = `❌ Sorry, I'm having trouble loading the domain courses right now. Please try again later.`;
+          const result = await metaApi.sendMessageWithRetry(from, response);
+          return res.status(200).send('OK');
+        }
       } else {
         console.log('📚 COURSE NUMBER DETECTED - Processing course selection');
         
