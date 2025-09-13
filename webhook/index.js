@@ -429,13 +429,15 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       }
     }
 
-    // 🔢 NUMBER-BASED COURSE SELECTION - Handle when user types just a number
+    // 🔢 NUMBER-BASED COURSE SELECTION - Handle when user types just a number or domain format
     const numberMatch = incomingMsg.match(/^(course\s*)?(\d+)$/i);
-    if (numberMatch) {
+    const domainMatch = incomingMsg.toLowerCase().match(/^domain\s*(\d+)$/i);
+    
+    if (numberMatch || domainMatch) {
       console.log('🔢 NUMBER INPUT DETECTED - Processing course/domain selection');
       
       // Check if this is a single digit 1-6 (domain selection) or course number
-      const courseNumber = parseInt(numberMatch[2]);
+      const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
       const userId = normalizeNumber(from);
       
       // 🎯 CHECK USER CONTEXT FIRST - If user recently selected a domain, treat number as course selection
@@ -486,12 +488,16 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           }
         }
       }
-      // 🎯 DOMAIN VS COURSE LOGIC - Single digits 1-6 are domains, others are course numbers
-      else if (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) {
+      // 🎯 DOMAIN VS COURSE LOGIC - Single digits 1-6 are domains, "domain X" format, others are course numbers
+      else if ((courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) || 
+               domainMatch) {
         console.log('🏷️ DOMAIN SELECTION DETECTED - Processing domain selection directly');
         // This is a domain selection, not a course number
         // Process domain selection directly here instead of falling through
         try {
+          // Use the already extracted courseNumber as domainNumber
+          const domainNumber = courseNumber;
+          
           const domainDefinitions = {
             1: {
               name: "Aerodrome Design, Operations, Planning & Engineering",
@@ -896,163 +902,6 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       }
     }
 
-    // 🏷️ DOMAIN-SPECIFIC COURSE LISTINGS - Handle when user selects a specific domain
-    if (incomingMsg.toLowerCase().match(/^domain\s*(\d+)$/i) || 
-        incomingMsg.toLowerCase().match(/^(\d+)$/i) ||  // Allow just numbers 1-6
-        incomingMsg.toLowerCase().includes('aerodrome') || 
-        incomingMsg.toLowerCase().includes('safety') || 
-        incomingMsg.toLowerCase().includes('data') || 
-        incomingMsg.toLowerCase().includes('leadership') || 
-        incomingMsg.toLowerCase().includes('stakeholder') || 
-        incomingMsg.toLowerCase().includes('finance')) {
-      
-      try {
-        let domainNumber = 0;
-        let domainName = '';
-        let domainCourses = [];
-        
-        // 🔍 DETERMINE WHICH DOMAIN WAS REQUESTED - Parse different input formats
-        if (incomingMsg.toLowerCase().match(/^domain\s*(\d+)$/i)) {
-          domainNumber = parseInt(incomingMsg.toLowerCase().match(/^domain\s*(\d+)$/i)[1]);
-        } else if (incomingMsg.toLowerCase().match(/^(\d+)$/i)) {
-          // Handle direct domain selection (1-6)
-          const directDomain = parseInt(incomingMsg.toLowerCase().match(/^(\d+)$/i)[1]);
-          if (directDomain >= 1 && directDomain <= 6) {
-            domainNumber = directDomain;
-          }
-        } else if (incomingMsg.toLowerCase().includes('aerodrome')) {
-          domainNumber = 1;
-        } else if (incomingMsg.toLowerCase().includes('safety')) {
-          domainNumber = 2;
-        } else if (incomingMsg.toLowerCase().includes('data')) {
-          domainNumber = 3;
-        } else if (incomingMsg.toLowerCase().includes('leadership')) {
-          domainNumber = 4;
-        } else if (incomingMsg.toLowerCase().includes('stakeholder')) {
-          domainNumber = 5;
-        } else if (incomingMsg.toLowerCase().includes('finance')) {
-          domainNumber = 6;
-        }
-
-        // 📚 DEFINE COURSES FOR EACH DOMAIN - Hardcoded course lists for each domain
-        const domainDefinitions = {
-          1: {
-            name: "Aerodrome Design, Operations, Planning & Engineering",
-            courses: [
-              "Global Reporting Format",
-              "Basic Principles of Aerodrome Safeguarding (NOC)",
-              "Airport Emergency Planning & Disabled Aircraft Removal",
-              "Infrastructure and Facilities for Passengers with Reduced Mobilities",
-              "Aircraft Classification Rating – Pavement",
-              "Aeronautical Ground Lights (AGL)",
-              "Runway Rubber Removal (RRR)",
-              "Aerodrome Design & Operations (Annex-14)",
-              "Aerodrome Licensing",
-              "Airfield Pavement Marking (APM)",
-              "Wildlife Hazard Management",
-              "Airfield Signs",
-              "Passenger Wayfinding Signages (PWS)",
-              "Airport Pavement Design, Evaluation & Maintenance",
-              "Aerodrome Planning (Greenfield/Brownfield Airport)",
-              "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
-              "Airport Terminal Management",
-              "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
-              "Aviation Sustainability and Green Technology"
-            ]
-          },
-          2: {
-            name: "Safety, Security & Compliance",
-            courses: [
-              "Safety Manag  zement System (SMS)",
-              "Aviation Cyber Security",
-              "Annex-9 (Facilitation)",
-              "Prevention of Sexual Harassment (POSH)",
-              "Compliance of Labour Laws"
-            ]
-          },
-          3: {
-            name: "Data Analysis, Decision Making, Innovation & Technology",
-            courses: [
-              "Data Analytics Using Power BI",
-              "Advance Excel & Power BI",
-              "Design Thinking for Nurturing Innovation",
-              "Data-Driven Decision Making",
-              "System Engineering and Project Management"
-            ]
-          },
-          4: {
-            name: "Leadership, Management & Professional Development",
-            courses: [
-              "Planning for Retirement",
-              "Stress Management",
-              "Human Factors",
-              "Mentorship and Succession Planning",
-              "Good to Great – Mid-Career Transition",
-              "Corporate Communication",
-              "APD Professional Competency Development",
-              "Leadership, Team Building & Conflict Management",
-              "Effective Presentation"
-            ]
-          },
-          5: {
-            name: "Stakeholder and Contract Management",
-            courses: [
-              "Industrial Relations and Stakeholder Management",
-              "Contract Management",
-              "Commercial Contract Management"
-            ]
-          },
-          6: {
-            name: "Financial Management & Auditing",
-            courses: [
-              "Delegation of Power & Budget Preparation",
-              "GeM Procurement",
-              "Right to Information Act, 2005",
-              "Goods and Services Tax & Statutory Taxation",
-              "Accounting & Internal Audit"
-            ]
-          }
-        };
-
-        // 🎯 PROCESS DOMAIN SELECTION - Show courses for the selected domain
-        if (domainNumber >= 1 && domainNumber <= 6) {
-          const domain = domainDefinitions[domainNumber];
-          const courseList = domain.courses.map((course, idx) => 
-            `${idx + 1}. ${course}`
-          ).join('\n\n');
-
-          // 🎯 STORE USER CONTEXT - Remember which domain user selected for course number handling
-          const userId = normalizeNumber(from);
-          userContext.set(userId, {
-            domainNumber: domainNumber,
-            domainName: domain.name,
-            courses: domain.courses,
-            timestamp: Date.now()
-          });
-
-          const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
-          
-          const result = await metaApi.sendMessageWithRetry(from, response);
-          
-          if (result.success) {
-            return res.status(200).send('OK');
-          } else {
-            return res.status(500).send('Error sending response');
-          }
-        }
-      } catch (error) {
-        console.error('Error showing domain courses:', error);
-        const response = `❌ Sorry, I'm having trouble loading the domain courses right now. Please try again later.`;
-        
-        const result = await metaApi.sendMessageWithRetry(from, response);
-        
-        if (result.success) {
-          return res.status(200).send('OK');
-        } else {
-          return res.status(500).send('Error sending response');
-        }
-      }
-    }
 
     // 📚 COURSE NAME RECOGNITION - Handle direct course name searches
     if (incomingMsg && incomingMsg.trim().length > 3) {
