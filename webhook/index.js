@@ -509,45 +509,31 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             1: {
               name: "Aerodrome Design, Operations, Planning & Engineering",
               courses: [
-                "Global Reporting Format",
-                "Basic Principles of Aerodrome Safeguarding (NOC)",
-                "Airport Emergency Planning & Disabled Aircraft Removal",
-                "Infrastructure and Facilities for Passengers with Reduced Mobilities",
-                "Aircraft Classification Rating – Pavement",
-                "Aeronautical Ground Lights (AGL)",
-                "Runway Rubber Removal (RRR)",
-                "Aerodrome Design & Operations (Annex-14)",
+                "Global reporting Format",
+                "Basic principles of Aerodrome Safeguarding(NOC)",
+                "Airport Emergency Planning  & Disabled Aircraft Removal",
+                "Infrastructure and facilities for Passengers with reduced mobilities",
+                "Aerdrome Design & Operations(Annex-14)",
                 "Aerodrome Licensing",
-                "Airfield Pavement Marking (APM)",
+                "Airfield pavement Marking(APM)",
                 "Wildlife Hazard Management",
-                "Airfield Signs",
-                "Passenger Wayfinding Signages (PWS)",
-                "Airport Pavement Design, Evaluation & Maintenance",
-                "Aerodrome Planning (Greenfield/Brownfield Airport)",
-                "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
-                "Airport Terminal Management",
-                "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
-                "Aviation Sustainability and Green Technology"
+                "Airfield Signs"
               ]
             },
             2: {
               name: "Safety, Security & Compliance",
               courses: [
-                "Safety Management System (SMS)",
+                "Safety Management System(SMS)",
                 "Aviation Cyber Security",
-                "Annex-9 (Facilitation)",
-                "Prevention of Sexual Harassment (POSH)",
-                "Compliance of Labour Laws"
+                "Human Factors "
               ]
             },
             3: {
               name: "Data Analysis, Decision Making, Innovation & Technology",
               courses: [
-                "Data Analytics Using Power BI",
-                "Advance Excel & Power BI",
-                "Design Thinking for Nurturing Innovation",
-                "Data-Driven Decision Making",
-                "System Engineering and Project Management"
+                "Data Analytics using Power Bi",
+                "Advance Excel & Power BI ",
+                "Design Thinking for nuturing innovation"
               ]
             },
             4: {
@@ -555,30 +541,21 @@ Thank you for reaching out to the Indian Aviation Academy!`;
               courses: [
                 "Planning for Retirement",
                 "Stress Management",
-                "Human Factors",
-                "Mentorship and Succession Planning",
-                "Good to Great – Mid-Career Transition",
-                "Corporate Communication",
-                "APD Professional Competency Development",
-                "Leadership, Team Building & Conflict Management",
-                "Effective Presentation"
+                "System Engineering and Project Management",
+                "Delegation of Power(DOP) & Budget Preparation",
+                "Prevention of Sexual Harrasment (POSH) Workshop"
               ]
             },
             5: {
               name: "Stakeholder and Contract Management",
               courses: [
-                "Industrial Relations and Stakeholder Management",
-                "Contract Management",
-                "Commercial Contract Management"
+                "Industrial Relations and Stakeholder management",
+                "GeM Procurement"
               ]
             },
             6: {
               name: "Financial Management & Auditing",
               courses: [
-                "Delegation of Power & Budget Preparation",
-                "GeM Procurement",
-                "Right to Information Act, 2005",
-                "Goods and Services Tax & Statutory Taxation",
                 "Accounting & Internal Audit"
               ]
             }
@@ -659,45 +636,31 @@ Thank you for reaching out to the Indian Aviation Academy!`;
               1: {
                 name: "Aerodrome Design, Operations, Planning & Engineering",
                 courses: [
-                  "Global Reporting Format",
-                  "Basic Principles of Aerodrome Safeguarding (NOC)",
-                  "Airport Emergency Planning & Disabled Aircraft Removal",
-                  "Infrastructure and Facilities for Passengers with Reduced Mobilities",
-                  "Aircraft Classification Rating – Pavement",
-                  "Aeronautical Ground Lights (AGL)",
-                  "Runway Rubber Removal (RRR)",
-                  "Aerodrome Design & Operations (Annex-14)",
+                  "Global reporting Format",
+                  "Basic principles of Aerodrome Safeguarding(NOC)",
+                  "Airport Emergency Planning  & Disabled Aircraft Removal",
+                  "Infrastructure and facilities for Passengers with reduced mobilities",
+                  "Aerdrome Design & Operations(Annex-14)",
                   "Aerodrome Licensing",
-                  "Airfield Pavement Marking (APM)",
+                  "Airfield pavement Marking(APM)",
                   "Wildlife Hazard Management",
-                  "Airfield Signs",
-                  "Passenger Wayfinding Signages (PWS)",
-                  "Airport Pavement Design, Evaluation & Maintenance",
-                  "Aerodrome Planning (Greenfield/Brownfield Airport)",
-                  "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
-                  "Airport Terminal Management",
-                  "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
-                  "Aviation Sustainability and Green Technology"
+                  "Airfield Signs"
                 ]
               },
               2: {
                 name: "Safety, Security & Compliance",
                 courses: [
-                  "Safety Management System (SMS)",
+                  "Safety Management System(SMS)",
                   "Aviation Cyber Security",
-                  "Annex-9 (Facilitation)",
-                  "Prevention of Sexual Harassment (POSH)",
-                  "Compliance of Labour Laws"
+                  "Human Factors "
                 ]
               },
               3: {
                 name: "Data Analysis, Decision Making, Innovation & Technology",
                 courses: [
-                  "Data Analytics Using Power BI",
-                  "Advance Excel & Power BI",
-                  "Design Thinking for Nurturing Innovation",
-                  "Data-Driven Decision Making",
-                  "System Engineering and Project Management"
+                  "Data Analytics using Power Bi",
+                  "Advance Excel & Power BI ",
+                  "Design Thinking for nuturing innovation"
                 ]
               },
               4: {
@@ -705,30 +668,21 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                 courses: [
                   "Planning for Retirement",
                   "Stress Management",
-                  "Human Factors",
-                  "Mentorship and Succession Planning",
-                  "Good to Great – Mid-Career Transition",
-                  "Corporate Communication",
-                  "APD Professional Competency Development",
-                  "Leadership, Team Building & Conflict Management",
-                  "Effective Presentation"
+                  "System Engineering and Project Management",
+                  "Delegation of Power(DOP) & Budget Preparation",
+                  "Prevention of Sexual Harrasment (POSH) Workshop"
                 ]
               },
               5: {
                 name: "Stakeholder and Contract Management",
                 courses: [
-                  "Industrial Relations and Stakeholder Management",
-                  "Contract Management",
-                  "Commercial Contract Management"
+                  "Industrial Relations and Stakeholder management",
+                  "GeM Procurement"
                 ]
               },
               6: {
                 name: "Financial Management & Auditing",
                 courses: [
-                  "Delegation of Power & Budget Preparation",
-                  "GeM Procurement",
-                  "Right to Information Act, 2005",
-                  "Goods and Services Tax & Statutory Taxation",
                   "Accounting & Internal Audit"
                 ]
               }
@@ -1068,12 +1022,12 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           
           // Define domain definitions for Dialogflow intents
           const dialogflowDomainDefinitions = {
-            1: { name: "Aerodrome Design, Operations, Planning & Engineering", courses: ["Global Reporting Format", "Basic Principles of Aerodrome Safeguarding (NOC)", "Airport Emergency Planning & Disabled Aircraft Removal", "Infrastructure and Facilities for Passengers with Reduced Mobilities", "Aircraft Classification Rating – Pavement", "Aeronautical Ground Lights (AGL)", "Runway Rubber Removal (RRR)", "Aerodrome Design & Operations (Annex-14)", "Aerodrome Licensing", "Airfield Pavement Marking (APM)", "Wildlife Hazard Management", "Airfield Signs", "Passenger Wayfinding Signages (PWS)", "Airport Pavement Design, Evaluation & Maintenance", "Aerodrome Planning (Greenfield/Brownfield Airport)", "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code", "Airport Terminal Management", "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports", "Aviation Sustainability and Green Technology"] },
-            2: { name: "Safety, Security & Compliance", courses: ["Safety Management System (SMS)", "Aviation Cyber Security", "Annex-9 (Facilitation)", "Prevention of Sexual Harassment (POSH)", "Compliance of Labour Laws"] },
-            3: { name: "Data Analysis, Decision Making, Innovation & Technology", courses: ["Data Analytics Using Power BI", "Advance Excel & Power BI", "Design Thinking for Nurturing Innovation", "Data-Driven Decision Making", "System Engineering and Project Management"] },
-            4: { name: "Leadership, Management & Professional Development", courses: ["Planning for Retirement", "Stress Management", "Human Factors", "Mentorship and Succession Planning", "Good to Great – Mid-Career Transition", "Corporate Communication", "APD Professional Competency Development", "Leadership, Team Building & Conflict Management", "Effective Presentation"] },
-            5: { name: "Stakeholder and Contract Management", courses: ["Industrial Relations and Stakeholder Management", "Contract Management", "Commercial Contract Management"] },
-            6: { name: "Financial Management & Auditing", courses: ["Delegation of Power & Budget Preparation", "GeM Procurement", "Right to Information Act, 2005", "Goods and Services Tax & Statutory Taxation", "Accounting & Internal Audit"] }
+            1: { name: "Aerodrome Design, Operations, Planning & Engineering", courses: ["Global reporting Format", "Basic principles of Aerodrome Safeguarding(NOC)", "Airport Emergency Planning  & Disabled Aircraft Removal", "Infrastructure and facilities for Passengers with reduced mobilities", "Aerdrome Design & Operations(Annex-14)", "Aerodrome Licensing", "Airfield pavement Marking(APM)", "Wildlife Hazard Management", "Airfield Signs"] },
+            2: { name: "Safety, Security & Compliance", courses: ["Safety Management System(SMS)", "Aviation Cyber Security", "Human Factors "] },
+            3: { name: "Data Analysis, Decision Making, Innovation & Technology", courses: ["Data Analytics using Power Bi", "Advance Excel & Power BI ", "Design Thinking for nuturing innovation"] },
+            4: { name: "Leadership, Management & Professional Development", courses: ["Planning for Retirement", "Stress Management", "System Engineering and Project Management", "Delegation of Power(DOP) & Budget Preparation", "Prevention of Sexual Harrasment (POSH) Workshop"] },
+            5: { name: "Stakeholder and Contract Management", courses: ["Industrial Relations and Stakeholder management", "GeM Procurement"] },
+            6: { name: "Financial Management & Auditing", courses: ["Accounting & Internal Audit"] }
           };
           
           if (domainNumber >= 1 && domainNumber <= 6) {
@@ -1497,76 +1451,54 @@ const handleWebhook = async (req, res) => {
                   1: {
                     name: "Aerodrome Design, Operations, Planning & Engineering",
                     courses: [
-                      "Global Reporting Format",
-                      "Basic Principles of Aerodrome Safeguarding (NOC)",
-                      "Airport Emergency Planning & Disabled Aircraft Removal",
-                      "Infrastructure and Facilities for Passengers with Reduced Mobilities",
-                      "Aircraft Classification Rating – Pavement",
-                      "Aeronautical Ground Lights (AGL)",
-                      "Runway Rubber Removal (RRR)",
-                      "Aerodrome Design & Operations (Annex-14)",
+                      "Global reporting Format",
+                      "Basic principles of Aerodrome Safeguarding(NOC)",
+                      "Airport Emergency Planning  & Disabled Aircraft Removal",
+                      "Infrastructure and facilities for Passengers with reduced mobilities",
+                      "Aerdrome Design & Operations(Annex-14)",
                       "Aerodrome Licensing",
-                      "Airfield Pavement Marking (APM)",
+                      "Airfield pavement Marking(APM)",
                       "Wildlife Hazard Management",
-                      "Airfield Signs",
-                      "Passenger Wayfinding Signages (PWS)",
-                      "Airport Pavement Design, Evaluation & Maintenance",
-                      "Aerodrome Planning (Greenfield/Brownfield Airport)",
-                      "Heating, Ventilation, & Air Conditioning and Energy Conservation Building Code",
-                      "Airport Terminal Management",
-                      "Electrical & Mechanical Installations, Maintenance, and Solar PV at Airports",
-                      "Aviation Sustainability and Green Technology"
+                      "Airfield Signs"
                     ]
                   },
                   2: {
                     name: "Safety, Security & Compliance",
                     courses: [
-                      "Safety Management System (SMS)",
-                      "Aviation Security Management",
-                      "Aircraft Accident Investigation",
-                      "Emergency Response Planning",
-                      "Regulatory Compliance"
+                      "Safety Management System(SMS)",
+                      "Aviation Cyber Security",
+                      "Human Factors "
                     ]
                   },
                   3: {
                     name: "Data Analysis, Decision Making, Innovation & Technology",
                     courses: [
-                      "Data Analytics for Aviation",
-                      "Decision Support Systems",
-                      "Innovation Management",
-                      "Technology Integration",
-                      "Digital Transformation"
+                      "Data Analytics using Power Bi",
+                      "Advance Excel & Power BI ",
+                      "Design Thinking for nuturing innovation"
                     ]
                   },
                   4: {
                     name: "Leadership, Management & Professional Development",
                     courses: [
-                      "Aviation Leadership",
-                      "Strategic Management",
-                      "Team Building",
-                      "Communication Skills",
-                      "Project Management",
-                      "Change Management",
-                      "Performance Management",
-                      "Conflict Resolution",
-                      "Professional Development"
+                      "Planning for Retirement",
+                      "Stress Management",
+                      "System Engineering and Project Management",
+                      "Delegation of Power(DOP) & Budget Preparation",
+                      "Prevention of Sexual Harrasment (POSH) Workshop"
                     ]
                   },
                   5: {
                     name: "Stakeholder and Contract Management",
                     courses: [
-                      "Stakeholder Engagement",
-                      "Contract Management",
-                      "Vendor Management"
+                      "Industrial Relations and Stakeholder management",
+                      "GeM Procurement"
                     ]
                   },
                   6: {
                     name: "Financial Management & Auditing",
                     courses: [
-                      "Aviation Finance",
-                      "Budget Management",
-                      "Financial Auditing",
-                      "Cost Control"
+                      "Accounting & Internal Audit"
                     ]
                   }
                 };
@@ -1604,6 +1536,7 @@ const handleWebhook = async (req, res) => {
                     });
                   } else {
                     console.log('❌ Failed to send domain selection response');
+                    // Don't return here, let it fall through to the original fallback
                   }
                 }
               }
