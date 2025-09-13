@@ -364,7 +364,6 @@ app.post('/meta-webhook', verifyWebhookSignature, validateAndSanitizeInput, asyn
     
     // 🧪 TEST MESSAGE HANDLER - For debugging and testing
     if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
-      console.log('🧪 TEST MESSAGE DETECTED - Sending test response');
       const testResponse = `🧪 *Test successful!*\n\nYour WhatsApp webhook is working correctly.\n\nMessage received: "${incomingMsg}"\nFrom: ${from} (${userName})\n\nNow try: "show all courses"`;
       
       const result = await metaApi.sendMessageWithRetry(from, testResponse);
@@ -433,13 +432,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     // 🔢 NUMBER-BASED COURSE SELECTION - Handle when user types just a number or domain format
     const numberMatch = incomingMsg.match(/^(course\s*)?(\d+)$/i);
     const domainMatch = incomingMsg.toLowerCase().match(/^domain\s*(\d+)$/i);
-    
-    if (numberMatch || domainMatch) {
-      console.log('🔢 NUMBER INPUT DETECTED - Processing course/domain selection');
-      console.log('🔍 DEBUG - incomingMsg:', JSON.stringify(incomingMsg));
-      console.log('🔍 DEBUG - numberMatch:', numberMatch);
-      console.log('🔍 DEBUG - domainMatch:', domainMatch);
       
+    if (numberMatch || domainMatch) {
       // Check if this is a single digit 1-6 (domain selection) or course number
       const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
       const userId = normalizeNumber(from);
@@ -448,11 +442,6 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       // 🎯 DOMAIN SELECTION LOGIC - Single digits 1-6 are domains, "domain X" format
       if ((courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) || 
           domainMatch) {
-        console.log('🏷️ DOMAIN SELECTION DETECTED - Processing domain selection directly');
-        console.log('🔍 DEBUG - courseNumber:', courseNumber);
-        console.log('🔍 DEBUG - incomingMsg.length:', incomingMsg.length);
-        console.log('🔍 DEBUG - condition1:', (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1));
-        console.log('🔍 DEBUG - condition2:', !!domainMatch);
         // This is a domain selection, not a course number
         // Process domain selection directly here instead of falling through
         try {
@@ -526,10 +515,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           console.error('Error processing domain selection:', error);
           const response = `❌ Sorry, I'm having trouble loading the domain courses right now. Please try again later.`;
           const result = await metaApi.sendMessageWithRetry(from, response);
-          return res.status(200).send('OK');
+            return res.status(200).send('OK');
         }
       }
-    }  
+    }
 
     // 🚨 SHOW ALL COURSES COMMAND - Handle when user wants to see all course categories
     if (incomingMsg.toLowerCase().includes('show all courses') || incomingMsg.toLowerCase().includes('list all courses')) {
@@ -1064,96 +1053,6 @@ const handleWebhook = async (req, res) => {
       console.log('🚀 ===== META WEBHOOK TRIGGERED =====');
       console.log('📨 Received webhook data:', JSON.stringify(req.body, null, 2));
       
-      // Check if this is a Dialogflow webhook first
-      if (req.body && req.body.responseId && req.body.queryResult) {
-        console.log('🤖 Dialogflow webhook detected');
-        const intent = req.body.queryResult.intent?.displayName || 'Default Fallback Intent';
-        const fulfillmentText = req.body.queryResult.fulfillmentText || '';
-        const queryText = req.body.queryResult.queryText || '';
-        
-        console.log(`🎯 Intent detected: ${intent}`);
-        console.log(`🔍 Query text: ${queryText}`);
-        
-        // 🎯 INTERCEPT FALLBACK FOR NUMBERS - Check if this is a fallback for a number that should be handled by our custom logic
-        if (intent === 'Default Fallback Intent' && queryText) {
-          const numberMatch = queryText.match(/^(course\s*)?(\d+)$/i);
-          const domainMatch = queryText.toLowerCase().match(/^domain\s*(\d+)$/i);
-          
-          if (numberMatch || domainMatch) {
-            console.log('🔢 INTERCEPTING FALLBACK FOR NUMBER - Processing with custom logic');
-            console.log('🔍 DEBUG - queryText:', JSON.stringify(queryText));
-            console.log('🔍 DEBUG - numberMatch:', numberMatch);
-            console.log('🔍 DEBUG - domainMatch:', domainMatch);
-            
-            // Extract the number
-            const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
-            console.log('🔍 DEBUG - courseNumber:', courseNumber);
-            
-            // Get session info to extract user phone number
-            const session = req.body.session || '';
-            const phoneMatch = session.match(/sessions\/(\d+)/);
-            const from = phoneMatch ? phoneMatch[1] : null;
-            
-            if (from) {
-              console.log('🔍 DEBUG - extracted phone:', from);
-              
-              // Course number selection removed - users should search by course name only
-              // Check if this is a domain selection (1-6)
-              if ((courseNumber >= 1 && courseNumber <= 6 && queryText.length === 1) || domainMatch) {
-                console.log('🏷️ DOMAIN SELECTION DETECTED IN DIALOGFLOW FALLBACK');
-                
-                // Process domain selection directly
-                const domainNumber = courseNumber;
-                
-                const domain = domainDefinitions[domainNumber];
-                if (domain) {
-                  // Store user context
-                  userContext.set(userId, {
-                    domainNumber: domainNumber,
-                    domainName: domain.name,
-                    courses: domain.courses,
-                    timestamp: Date.now()
-                  });
-                  
-                  const response = getDomainResponse(domain, domainNumber);
-                  
-                  // Send response via Meta API
-                  const result = await metaApi.sendMessageWithRetry(from, response);
-                  
-                  if (result.success) {
-                    console.log('✅ Domain selection response sent successfully');
-                    return res.status(200).json({
-                      fulfillmentText: response,
-                      fulfillmentMessages: [{
-                        text: {
-                          text: [response]
-                        }
-                      }],
-                      outputContexts: [],
-                      followupEventInput: null
-                    });
-                  } else {
-                    console.log('❌ Failed to send domain selection response');
-                    // Don't return here, let it fall through to the original fallback
-                  }
-                }
-              }
-            }
-          }
-        }
-        
-        // Return proper Dialogflow webhook response
-        return res.status(200).json({
-          fulfillmentText: fulfillmentText,
-          fulfillmentMessages: [{
-            text: {
-              text: [fulfillmentText]
-            }
-          }],
-          outputContexts: [],
-          followupEventInput: null
-        });
-      }
       
       // Check if this is a Meta webhook (WhatsApp messages)
       if (req.body && req.body.object === 'whatsapp_business_account') {
@@ -1172,12 +1071,9 @@ const handleWebhook = async (req, res) => {
         console.log('💬 Processing message:', incomingMsg);
         console.log('👤 From:', from, `(${userName})`);
         console.log('📊 Message length:', incomingMsg ? incomingMsg.length : 'undefined');
-        console.log('🔍 DEBUG - Raw incomingMsg:', JSON.stringify(incomingMsg));
-        console.log('🔍 DEBUG - incomingMsg type:', typeof incomingMsg);
         
         // 🧪 TEST MESSAGE HANDLER - For debugging and testing
         if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
-          console.log('🧪 TEST MESSAGE DETECTED - Sending test response');
           const testResponse = `🧪 *Test successful!*\n\nYour WhatsApp webhook is working correctly.\n\nMessage received: "${incomingMsg}"\nFrom: ${from} (${userName})\n\nNow try: "show all courses"`;
           
           const result = await metaApi.sendMessageWithRetry(from, testResponse);
@@ -1409,8 +1305,26 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                 dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
                 console.log('🎯 Course info intent detected, using fulfillment text:', dialogflowResponse);
               } else if (intent === 'Default Fallback Intent') {
-                // Handle fallback intent with better response
-                dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+                // Check if this is a domain number that should be handled by our custom logic
+                const queryText = queryResult.queryText || '';
+                const numberMatch = queryText.match(/^(course\s*)?(\d+)$/i);
+                const domainMatch = queryText.toLowerCase().match(/^domain\s*(\d+)$/i);
+                
+                if (numberMatch || domainMatch) {
+                  const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
+                  
+                  // If this is a domain selection (1-6), don't send fallback message
+                  if ((courseNumber >= 1 && courseNumber <= 6 && queryText.length === 1) || domainMatch) {
+                    // This will be handled by the Dialogflow webhook handler below
+                    dialogflowResponse = 'Domain selection detected - processing...';
+                  } else {
+                    // Handle fallback intent with better response for non-domain numbers
+                    dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+                  }
+                } else {
+                  // Handle fallback intent with better response for non-number inputs
+                  dialogflowResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+                }
               } else {
                 dialogflowResponse = queryResult.fulfillmentText || 'I understand your message but don\'t have a specific response for it.';
               }
@@ -1456,9 +1370,6 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       
       // 🤖 DIALOGFLOW WEBHOOK HANDLER - Handle responses from Dialogflow
       if (req.body && req.body.responseId && req.body.queryResult) {
-        console.log('🤖 Dialogflow webhook detected');
-        console.log('🎯 Intent detected:', req.body.queryResult.intent.displayName);
-        
         const queryResult = req.body.queryResult;
         const intent = queryResult.intent.displayName;
         const userText = queryResult.queryText;
@@ -1469,17 +1380,11 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         const from = sessionMatch ? sessionMatch[1] : null;
         
         if (!from) {
-          console.error('❌ Could not extract user phone number from session');
           return res.status(400).json({ error: 'Invalid session format' });
         }
         
-        console.log('📱 User phone number:', from);
-        console.log('💬 User text:', userText);
-        
         // 🏷️ DIALOGFLOW FALLBACK INTERCEPTION - Handle domain selection when Dialogflow returns fallback
         if (intent === 'Default Fallback Intent' && userText) {
-          console.log('🚨 DIALOGFLOW FALLBACK INTERCEPTED - Checking for domain selection');
-          
           const numberMatch = userText.match(/^(course\s*)?(\d+)$/i);
           const domainMatch = userText.toLowerCase().match(/^domain\s*(\d+)$/i);
           
@@ -1488,8 +1393,6 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             
             // Check if this is a domain selection (1-6)
             if ((courseNumber >= 1 && courseNumber <= 6 && userText.length === 1) || domainMatch) {
-              console.log('🏷️ DOMAIN SELECTION DETECTED IN DIALOGFLOW FALLBACK - Processing directly');
-              
               const domain = domainDefinitions[courseNumber];
               if (domain) {
                 const response = getDomainResponse(domain, courseNumber);
@@ -1497,10 +1400,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                 const result = await metaApi.sendMessageWithRetry(from, response);
                 
                 if (result.success) {
-                  console.log('✅ Domain response sent successfully via Dialogflow fallback interception');
                   return res.status(200).json({ fulfillmentText: 'Domain courses sent successfully' });
                 } else {
-                  console.error('❌ Failed to send domain response:', result.error);
                   return res.status(500).json({ error: 'Failed to send response' });
                 }
               }
@@ -1509,16 +1410,13 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         }
         
         // If not a domain selection, let Dialogflow handle it normally
-        console.log('📤 Sending Dialogflow response to user');
         const dialogflowResponse = queryResult.fulfillmentText || 'I received your message but couldn\'t process it properly.';
         
         const result = await metaApi.sendMessageWithRetry(from, dialogflowResponse);
         
         if (result.success) {
-          console.log('✅ Dialogflow response sent successfully');
           return res.status(200).json({ fulfillmentText: 'Response sent successfully' });
         } else {
-          console.error('❌ Failed to send Dialogflow response:', result.error);
           return res.status(500).json({ error: 'Failed to send response' });
         }
       }
