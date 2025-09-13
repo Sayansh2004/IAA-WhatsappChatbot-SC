@@ -61,8 +61,88 @@ module.exports = async (req, res) => {
   if (intent === 'greeting' && req.body.queryResult.queryText && req.body.queryResult.queryText.trim().toLowerCase() !== 'input.welcome') {
     return res.json({
       fulfillmentText:
-        `👋 Welcome to the Indian Aviation Academy (IAA) Chatbot!\n\nI'm here to help you with all your training and professional development queries in the aviation sector.\n\n✨ Here's how you can interact with me:\n1. **Ask about courses:**\n   - "Show all courses"\n   - "List courses in HR"\n   - "What courses are available in Operations?"\n\n2. **Get course details:**\n   - "What is the fee for [Course Name]?"\n   - "Who is the coordinator for [Course Name]?"\n   - "When does [Course Name] start?"\n   - "Tell me about course number 6"\n   - "Show course 12"\n\n3. **Other information:**\n   - "Tell me about hostel facilities"\n   - "How do I register for a course?"\n\n💡 **Tips for a seamless experience:**\n- Type your question or select from the suggested options.\n- Use clear course names or categories for best results.\n- You can also use course numbers (e.g., "course 6" or just "6").\n- If you need help at any point, just type "help".\n\n🔴 **IMPORTANT:** Just type *FORM* if I am unable to solve your query!\n\nI'm ready to assist you!\nHow can I help you today?`
+        `👋 Welcome to the Indian Aviation Academy (IAA) Chatbot!\n\nI'm here to help you with all your training and professional development queries in the aviation sector.\n\n✨ Here's how you can interact with me:\n1. **Ask about courses:**\n   - "Show all courses"\n   - "List courses in HR"\n   - "What courses are available in Operations?"\n\n2. **Get course details:**\n   - "What is the fee for [Course Name]?"\n   - "Who is the coordinator for [Course Name]?"\n   - "When does [Course Name] start?"\n   - "Tell me about Safety Management System"\n   - "Show Gem Procurement details"\n\n3. **Other information:**\n   - "Tell me about hostel facilities"\n   - "How do I register for a course?"\n\n💡 **Tips for a seamless experience:**\n- Type your question or select from the suggested options.\n- Use clear course names or categories for best results.\n- Numbers (1-6) work for domain selection only\n- For course information, type course name (full recommended or partial)\n- If you need help at any point, just type "help".\n\n🔴 **IMPORTANT:** Just type *FORM* if I am unable to solve your query!\n\nI'm ready to assist you!\nHow can I help you today?`
     });
+  }
+
+  // 🏷️ DOMAIN SELECTION HANDLER - Handle domain selection by number (1-6)
+  if (intent === 'Default Fallback Intent' && userText) {
+    const numberMatch = userText.match(/^(course\s*)?(\d+)$/i);
+    const domainMatch = userText.toLowerCase().match(/^domain\s*(\d+)$/i);
+    
+    if (numberMatch || domainMatch) {
+      const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
+      
+      // Check if this is a domain selection (1-6)
+      if ((courseNumber >= 1 && courseNumber <= 6 && userText.length === 1) || domainMatch) {
+        const domainDefinitions = {
+          1: {
+            name: "Aerodrome Design, Operations, Planning & Engineering",
+            courses: [
+              "Global reporting Format",
+              "Basic principles of Aerodrome Safeguarding(NOC)",
+              "Airport Emergency Planning  & Disabled Aircraft Removal",
+              "Infrastructure and facilities for Passengers with reduced mobilities",
+              "Aerdrome Design & Operations(Annex-14)",
+              "Aerodrome Licensing",
+              "Airfield pavement Marking(APM)",
+              "Wildlife Hazard Management",
+              "Airfield Signs"
+            ]
+          },
+          2: {
+            name: "Safety, Security & Compliance",
+            courses: [
+              "Safety Management System(SMS)",
+              "Aviation Cyber Security",
+              "Human Factors "
+            ]
+          },
+          3: {
+            name: "Data Analysis, Decision Making, Innovation & Technology",
+            courses: [
+              "Data Analytics using Power Bi",
+              "Advance Excel & Power BI ",
+              "Design Thinking for nuturing innovation"
+            ]
+          },
+          4: {
+            name: "Leadership, Management & Professional Development",
+            courses: [
+              "Planning for Retirement",
+              "Stress Management",
+              "System Engineering and Project Management",
+              "Delegation of Power(DOP) & Budget Preparation",
+              "Prevention of Sexual Harrasment (POSH) Workshop"
+            ]
+          },
+          5: {
+            name: "Stakeholder and Contract Management",
+            courses: [
+              "Industrial Relations and Stakeholder management",
+              "GeM Procurement"
+            ]
+          },
+          6: {
+            name: "Financial Management & Auditing",
+            courses: [
+              "Accounting & Internal Audit"
+            ]
+          }
+        };
+        
+        const domain = domainDefinitions[courseNumber];
+        if (domain) {
+          const courseList = domain.courses.map((course, idx) => 
+            `${idx + 1}. ${course}`
+          ).join('\n\n');
+          
+          return res.json({
+            fulfillmentText: `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`
+          });
+        }
+      }
+    }
   }
 
   // 📚 LIST COURSES INTENT - Show all available courses in a numbered list
@@ -86,7 +166,7 @@ module.exports = async (req, res) => {
     // 📤 RETURN FORMATTED RESPONSE - Send back the course list
     return res.json({
       fulfillmentText:
-        `📚 **All Available Courses:**\n\n${courseList}\n\n💡 **How to use:**\n• Type a course number (e.g., "6" or "course 6")\n• Type the full course name\n• Ask about specific details like fees, dates, or coordinators\n\nTotal courses available: ${uniqueCourses.length}`
+        `📚 **All Available Courses:**\n\n${courseList}\n\n💡 **How to use:**\n• Type full course name or partials(e.g., "Gem for Gem Procurement" or "Power Bi for Advance Excel and Power Bi")\n• Type the full course name\n• Ask about specific details like fees, dates, or coordinators\n\nTotal courses available: ${uniqueCourses.length}`
     });
   }
 

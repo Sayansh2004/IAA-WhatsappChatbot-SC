@@ -380,7 +380,7 @@ app.post('/meta-webhook', verifyWebhookSignature, validateAndSanitizeInput, asyn
     // 👋 GREETING HANDLER - Handle basic greetings directly (bypasses Dialogflow)
     if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
       console.log('👋 GREETING DETECTED - Sending welcome response');
-      const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+      const greetingResponse = `👋 *Hello ${userName}! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n• "Gem Procurement" - for specific course details\n\nHow can I assist you today?`;
       
       const result = await metaApi.sendMessageWithRetry(from, greetingResponse);
       
@@ -443,57 +443,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
       const userId = normalizeNumber(from);
       
-      // 🎯 CHECK USER CONTEXT FIRST - If user recently selected a domain, treat number as course selection
-      const userContextData = userContext.get(userId);
-      const contextAge = userContextData ? Date.now() - userContextData.timestamp : Infinity;
-      const isRecentContext = contextAge < 300000; // 5 minutes context validity
-      
-      if (userContextData && isRecentContext && courseNumber >= 1 && courseNumber <= userContextData.courses.length) {
-        console.log(`📚 COURSE NUMBER WITHIN DOMAIN CONTEXT - Domain ${userContextData.domainNumber}, Course ${courseNumber}`);
-        
-        try {
-          // Find the course in the database by name
-          const courses = require('../data/courses.json');
-          const selectedCourseName = userContextData.courses[courseNumber - 1];
-          const selectedCourse = findCourseByName(selectedCourseName, courses);
-          
-          if (selectedCourse) {
-            const response = formatCourseInfo(selectedCourse);
-            
-            const result = await metaApi.sendMessageWithRetry(from, response);
-            
-            if (result.success) {
-              return res.status(200).send('OK');
-            } else {
-              return res.status(500).send('Error sending response');
-            }
-          } else {
-            const response = `❌ Sorry, I couldn't find detailed information for "${selectedCourseName}" in our database. Please contact support.`;
-            
-            const result = await metaApi.sendMessageWithRetry(from, response);
-            
-            if (result.success) {
-              return res.status(200).send('OK');
-            } else {
-              return res.status(500).send('Error sending response');
-            }
-          }
-        } catch (error) {
-          console.error('Error loading course for context-based selection:', error);
-          const response = `❌ Sorry, I'm having trouble loading the course information right now. Please try again later.`;
-          
-          const result = await metaApi.sendMessageWithRetry(from, response);
-          
-          if (result.success) {
-            return res.status(200).send('OK');
-          } else {
-            return res.status(500).send('Error sending response');
-          }
-        }
-      }
-      // 🎯 DOMAIN VS COURSE LOGIC - Single digits 1-6 are domains, "domain X" format, others are course numbers
-      else if ((courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) || 
-               domainMatch) {
+      // Course number selection removed - users should search by course name only
+      // 🎯 DOMAIN SELECTION LOGIC - Single digits 1-6 are domains, "domain X" format
+      if ((courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) || 
+          domainMatch) {
         console.log('🏷️ DOMAIN SELECTION DETECTED - Processing domain selection directly');
         console.log('🔍 DEBUG - courseNumber:', courseNumber);
         console.log('🔍 DEBUG - incomingMsg.length:', incomingMsg.length);
@@ -575,7 +528,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
               timestamp: Date.now()
             });
 
-            const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+            const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
             
             const result = await metaApi.sendMessageWithRetry(from, response);
             
@@ -627,167 +580,12 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             }
           }
           
-          // 🎯 DOMAIN-SPECIFIC COURSE SELECTION - If we detected a domain context
-          if (domainContext) {
-            console.log(`🏷️ DOMAIN CONTEXT DETECTED: Domain ${domainContext}`);
-            
-            // 📚 DOMAIN DEFINITIONS - Each domain has its specific courses
-            const domainDefinitions = {
-              1: {
-                name: "Aerodrome Design, Operations, Planning & Engineering",
-                courses: [
-                  "Global reporting Format",
-                  "Basic principles of Aerodrome Safeguarding(NOC)",
-                  "Airport Emergency Planning  & Disabled Aircraft Removal",
-                  "Infrastructure and facilities for Passengers with reduced mobilities",
-                  "Aerdrome Design & Operations(Annex-14)",
-                  "Aerodrome Licensing",
-                  "Airfield pavement Marking(APM)",
-                  "Wildlife Hazard Management",
-                  "Airfield Signs"
-                ]
-              },
-              2: {
-                name: "Safety, Security & Compliance",
-                courses: [
-                  "Safety Management System(SMS)",
-                  "Aviation Cyber Security",
-                  "Human Factors "
-                ]
-              },
-              3: {
-                name: "Data Analysis, Decision Making, Innovation & Technology",
-                courses: [
-                  "Data Analytics using Power Bi",
-                  "Advance Excel & Power BI ",
-                  "Design Thinking for nuturing innovation"
-                ]
-              },
-              4: {
-                name: "Leadership, Management & Professional Development",
-                courses: [
-                  "Planning for Retirement",
-                  "Stress Management",
-                  "System Engineering and Project Management",
-                  "Delegation of Power(DOP) & Budget Preparation",
-                  "Prevention of Sexual Harrasment (POSH) Workshop"
-                ]
-              },
-              5: {
-                name: "Stakeholder and Contract Management",
-                courses: [
-                  "Industrial Relations and Stakeholder management",
-                  "GeM Procurement"
-                ]
-              },
-              6: {
-                name: "Financial Management & Auditing",
-                courses: [
-                  "Accounting & Internal Audit"
-                ]
-              }
-            };
-            
-            const domain = domainDefinitions[domainContext];
-            domainCourses = domain.courses;
-            
-            if (courseNumber < 1 || courseNumber > domainCourses.length) {
-              const response = `❌ Sorry, course number ${courseNumber} doesn't exist in ${domain.name}. This domain has ${domainCourses.length} courses available.\n\nType "domain ${domainContext}" to see the courses again.`;
-              
-              const result = await metaApi.sendMessageWithRetry(from, response);
-              
-              if (result.success) {
-                return res.status(200).send('OK');
-              } else {
-                return res.status(500).send('Error sending response');
-              }
-            }
-            
-            // Find the course in the database by name
-            const courses = require('../data/courses.json');
-            const selectedCourseName = domainCourses[courseNumber - 1];
-            const selectedCourse = findCourseByName(selectedCourseName, courses);
-            
-            if (selectedCourse) {
-              const response = formatCourseInfo(selectedCourse);
-              
-              const result = await metaApi.sendMessageWithRetry(from, response);
-              
-              if (result.success) {
-                return res.status(200).send('OK');
-              } else {
-                return res.status(500).send('Error sending response');
-              }
-            } else {
-              const response = `❌ Sorry, I couldn't find detailed information for "${selectedCourseName}" in our database. Please contact support.`;
-              
-              const result = await metaApi.sendMessageWithRetry(from, response);
-              
-              if (result.success) {
-                return res.status(200).send('OK');
-              } else {
-                return res.status(500).send('Error sending response');
-              }
-            }
-          } else {
-            // Fallback to global course selection
-            const courses = require('../data/courses.json');
-            
-            // Get unique courses (remove duplicates)
-            const seen = new Set();
-            const uniqueCourses = courses.filter(c => {
-              const name = c['प्रशिक्षण कार्यक्रम Programme'];
-              if (!name || seen.has(name)) return false;
-              seen.add(name);
-              return true;
-            });
-
-            if (uniqueCourses.length === 0) {
-              const response = `❌ Sorry, no courses found in the database. Please contact support.`;
-              
-              const result = await metaApi.sendMessageWithRetry(from, response);
-              
-              if (result.success) {
-                return res.status(200).send('OK');
-              } else {
-                return res.status(500).send('Error sending response');
-              }
-            }
-
-            if (courseNumber < 1 || courseNumber > uniqueCourses.length) {
-              const response = `❌ Sorry, course number ${courseNumber} doesn't exist. We have ${uniqueCourses.length} courses available.\n\nType "show all courses" to see the complete list.`;
-              
-              const result = await metaApi.sendMessageWithRetry(from, response);
-              
-              if (result.success) {
-                return res.status(200).send('OK');
-              } else {
-                return res.status(500).send('Error sending response');
-              }
-            }
-
-            const selectedCourse = uniqueCourses[courseNumber - 1];
-            const response = formatCourseInfo(selectedCourse);
-            
-            const result = await metaApi.sendMessageWithRetry(from, response);
-            
-            if (result.success) {
-              return res.status(200).send('OK');
-            } else {
-              return res.status(500).send('Error sending response');
-            }
-          }
+          // Course number selection removed - users should search by course name only
         } catch (error) {
-          console.error('Error loading courses for number selection:', error);
-          const response = `❌ Sorry, I'm having trouble loading the course information right now. Please try again later.`;
-          
+          console.error('Error processing domain selection:', error);
+          const response = `❌ Sorry, I'm having trouble loading the domain courses right now. Please try again later.`;
           const result = await metaApi.sendMessageWithRetry(from, response);
-          
-          if (result.success) {
-            return res.status(200).send('OK');
-          } else {
-            return res.status(500).send('Error sending response');
-          }
+          return res.status(200).send('OK');
         }
       }
     }
@@ -949,7 +747,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         // 🎯 CONFIDENCE SCORE CHECK - Trigger fallback only for very low confidence
         if (confidence < 0.3) {
           console.log('⚠️ Very low confidence detected:', confidence, '- Triggering fallback form');
-          const fallbackResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• Ask about specific course details\n\nThank you for your patience!`;
+          const fallbackResponse = `🤔 *I understand your query but need more specific information to help you better.*\n\nSince I couldn't provide a complete answer, please fill out our detailed form so our team can assist you properly:\n\n🔗 https://iaa-admin-dashboard.vercel.app\n\n💡 *You can also try:*\n• "show all courses" - to see available courses\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n• "Gem Procurement" - for specific course details\n\nThank you for your patience!`;
           
           const result = await metaApi.sendMessageWithRetry(from, fallbackResponse);
           
@@ -970,7 +768,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         
         // 🎯 HANDLE SPECIFIC INTENTS FOR WHATSAPP - Custom responses for common intents
         if (intent === 'greeting' || intent === 'welcome') {
-          dialogflowResponse = `👋 *Hello! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n\nHow can I assist you today?`;
+          dialogflowResponse = `👋 *Hello! Welcome to IAA (Indian Aviation Academy)!*\n\nI'm here to help you with information about our training courses. Here's what I can do:\n\n• Show all available courses\n• Provide course details and information\n• Answer questions about fees, dates, coordinators\n• Help with registration forms\n\n💡 *Try saying:*\n• "show all courses" - to see all course categories\n• "domain 1" - to see aerodrome courses\n• "Safety Management System" - for specific course info\n• "Gem Procurement" - for specific course details\n\nHow can I assist you today?`;
         } else if (intent === 'goodbye' || intent === 'farewell' || intent === 'end_conversation') {
           // 🎉 BEAUTIFUL GOODBYE RESPONSE - Professional and personalized farewell
           const userName = queryResult.parameters.person_name || 'Valued Student';
@@ -992,7 +790,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                              `\n💡 *How to use:*\n` +
                              `• Type "domain 1" to see aerodrome courses\n` +
                              `• Type "domain 2" to see safety courses\n` +
-                             `• Type a course number (e.g., "6" or "course 6")\n` +
+                             `• Type a course full name or partial name (e.g., "Gem for Gem Procrement" or "Power Bi for Advance Excel and Power Bi")\n` +
                              `• Type the full course name or part of it\n` +
                              `• Ask about specific details like fees, dates, or coordinators\n\n` +
                              `Total domains: 6 | Total courses: 45`;
@@ -1034,7 +832,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
             const domain = dialogflowDomainDefinitions[domainNumber];
             if (domain) {
               const courseList = domain.courses.map((course, idx) => `${idx + 1}. ${course}`).join('\n\n');
-              dialogflowResponse = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "6" or "course 6")\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+              dialogflowResponse = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Gem Procurement", "Power Bi", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
             } else {
               dialogflowResponse = `❌ Sorry, domain ${domainNumber} not found. Please try "show all courses" to see available domains.`;
             }
@@ -1369,79 +1167,9 @@ const handleWebhook = async (req, res) => {
             if (from) {
               console.log('🔍 DEBUG - extracted phone:', from);
               
-              // Check user context first for course number selection
-              const userId = normalizeNumber(from);
-              const userContextData = userContext.get(userId);
-              const contextAge = userContextData ? Date.now() - userContextData.timestamp : Infinity;
-              const isRecentContext = contextAge < 300000; // 5 minutes context validity
-              
-              if (userContextData && isRecentContext && courseNumber >= 1 && courseNumber <= userContextData.courses.length) {
-                console.log(`📚 COURSE NUMBER WITHIN DOMAIN CONTEXT - Domain ${userContextData.domainNumber}, Course ${courseNumber}`);
-                
-                try {
-                  // Find the course in the database by name
-                  const courses = require('../data/courses.json');
-                  const selectedCourseName = userContextData.courses[courseNumber - 1];
-                  const selectedCourse = findCourseByName(selectedCourseName, courses);
-                  
-                  if (selectedCourse) {
-                    const response = formatCourseInfo(selectedCourse);
-                    
-                    const result = await metaApi.sendMessageWithRetry(from, response);
-                    
-                    if (result.success) {
-                      console.log('✅ Course details sent successfully');
-                      return res.status(200).json({
-                        fulfillmentText: response,
-                        fulfillmentMessages: [{
-                          text: {
-                            text: [response]
-                          }
-                        }],
-                        outputContexts: [],
-                        followupEventInput: null
-                      });
-                    }
-                  } else {
-                    const response = `❌ Sorry, I couldn't find detailed information for "${selectedCourseName}" in our database. Please contact support.`;
-                    
-                    const result = await metaApi.sendMessageWithRetry(from, response);
-                    
-                    if (result.success) {
-                      return res.status(200).json({
-                        fulfillmentText: response,
-                        fulfillmentMessages: [{
-                          text: {
-                            text: [response]
-                          }
-                        }],
-                        outputContexts: [],
-                        followupEventInput: null
-                      });
-                    }
-                  }
-                } catch (error) {
-                  console.error('Error loading course for context-based selection:', error);
-                  const response = `❌ Sorry, I'm having trouble loading the course information right now. Please try again later.`;
-                  
-                  const result = await metaApi.sendMessageWithRetry(from, response);
-                  
-                  if (result.success) {
-                    return res.status(200).json({
-                      fulfillmentText: response,
-                      fulfillmentMessages: [{
-                        text: {
-                          text: [response]
-                        }
-                      }],
-                      outputContexts: [],
-                      followupEventInput: null
-                    });
-                  }
-                }
-              }
+              // Course number selection removed - users should search by course name only
               // Check if this is a domain selection (1-6)
-              else if ((courseNumber >= 1 && courseNumber <= 6 && queryText.length === 1) || domainMatch) {
+              if ((courseNumber >= 1 && courseNumber <= 6 && queryText.length === 1) || domainMatch) {
                 console.log('🏷️ DOMAIN SELECTION DETECTED IN DIALOGFLOW FALLBACK');
                 
                 // Process domain selection directly
@@ -1517,7 +1245,7 @@ const handleWebhook = async (req, res) => {
                     timestamp: Date.now()
                   });
                   
-                  const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Type a course number (e.g., "1", "2", "3") to get course details\n• Type the full course name or part of it\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+                  const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
                   
                   // Send response via Meta API
                   const result = await metaApi.sendMessageWithRetry(from, response);
@@ -1668,7 +1396,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
                             `\n💡 *How to use:*\n` +
                             `• Type "domain 1" to see aerodrome courses\n` +
                             `• Type "domain 2" to see safety courses\n` +
-                            `• Type a course number (e.g., "6" or "course 6")\n` +
+                            `• Type full course name or a part of it (e.g., "Gem for Gem Procrement" or "Power Bi for Advance Excel and Power Bi")\n` +
                             `• Type the full course name or part of it\n` +
                             `• Ask about specific details like fees, dates, or coordinators\n\n` +
                             `Total domains: 6 | Total courses: 45`;
