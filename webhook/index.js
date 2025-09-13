@@ -435,6 +435,9 @@ Thank you for reaching out to the Indian Aviation Academy!`;
     
     if (numberMatch || domainMatch) {
       console.log('🔢 NUMBER INPUT DETECTED - Processing course/domain selection');
+      console.log('🔍 DEBUG - incomingMsg:', JSON.stringify(incomingMsg));
+      console.log('🔍 DEBUG - numberMatch:', numberMatch);
+      console.log('🔍 DEBUG - domainMatch:', domainMatch);
       
       // Check if this is a single digit 1-6 (domain selection) or course number
       const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
@@ -492,6 +495,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
       else if ((courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1) || 
                domainMatch) {
         console.log('🏷️ DOMAIN SELECTION DETECTED - Processing domain selection directly');
+        console.log('🔍 DEBUG - courseNumber:', courseNumber);
+        console.log('🔍 DEBUG - incomingMsg.length:', incomingMsg.length);
+        console.log('🔍 DEBUG - condition1:', (courseNumber >= 1 && courseNumber <= 6 && incomingMsg.length === 1));
+        console.log('🔍 DEBUG - condition2:', !!domainMatch);
         // This is a domain selection, not a course number
         // Process domain selection directly here instead of falling through
         try {
@@ -1413,6 +1420,8 @@ const handleWebhook = async (req, res) => {
         console.log('💬 Processing message:', incomingMsg);
         console.log('👤 From:', from, `(${userName})`);
         console.log('📊 Message length:', incomingMsg ? incomingMsg.length : 'undefined');
+        console.log('🔍 DEBUG - Raw incomingMsg:', JSON.stringify(incomingMsg));
+        console.log('🔍 DEBUG - incomingMsg type:', typeof incomingMsg);
         
         // 🧪 TEST MESSAGE HANDLER - For debugging and testing
         if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
