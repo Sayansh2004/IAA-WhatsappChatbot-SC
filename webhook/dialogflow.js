@@ -41,6 +41,9 @@
  * - Webhook: How Dialogflow communicates with our server
  */
 
+// Import shared domain definitions
+const { domainDefinitions, getDomainResponse, isDomainSelection } = require('./domain-definitions');
+
 // 📥 EXPORT THE MAIN FUNCTION - This is what Dialogflow calls when it needs a response
 module.exports = async (req, res) => {
   // 🔍 EXTRACT DIALOGFLOW DATA - Get the key information from the request
@@ -75,75 +78,16 @@ module.exports = async (req, res) => {
       
       // Check if this is a domain selection (1-6)
       if ((courseNumber >= 1 && courseNumber <= 6 && userText.length === 1) || domainMatch) {
-        const domainDefinitions = {
-          1: {
-            name: "Aerodrome Design, Operations, Planning & Engineering",
-            courses: [
-              "Global reporting Format",
-              "Basic principles of Aerodrome Safeguarding(NOC)",
-              "Airport Emergency Planning  & Disabled Aircraft Removal",
-              "Infrastructure and facilities for Passengers with reduced mobilities",
-              "Aerdrome Design & Operations(Annex-14)",
-              "Aerodrome Licensing",
-              "Airfield pavement Marking(APM)",
-              "Wildlife Hazard Management",
-              "Airfield Signs"
-            ]
-          },
-          2: {
-            name: "Safety, Security & Compliance",
-            courses: [
-              "Safety Management System(SMS)",
-              "Aviation Cyber Security",
-              "Human Factors "
-            ]
-          },
-          3: {
-            name: "Data Analysis, Decision Making, Innovation & Technology",
-            courses: [
-              "Data Analytics using Power Bi",
-              "Advance Excel & Power BI ",
-              "Design Thinking for nuturing innovation"
-            ]
-          },
-          4: {
-            name: "Leadership, Management & Professional Development",
-            courses: [
-              "Planning for Retirement",
-              "Stress Management",
-              "System Engineering and Project Management",
-              "Delegation of Power(DOP) & Budget Preparation",
-              "Prevention of Sexual Harrasment (POSH) Workshop"
-            ]
-          },
-          5: {
-            name: "Stakeholder and Contract Management",
-            courses: [
-              "Industrial Relations and Stakeholder management",
-              "GeM Procurement"
-            ]
-          },
-          6: {
-            name: "Financial Management & Auditing",
-            courses: [
-              "Accounting & Internal Audit"
-            ]
-          }
-        };
-        
         const domain = domainDefinitions[courseNumber];
         if (domain) {
-          const courseList = domain.courses.map((course, idx) => 
-            `${idx + 1}. ${course}`
-          ).join('\n\n');
-          
           return res.json({
-            fulfillmentText: `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`
+            fulfillmentText: getDomainResponse(domain, courseNumber)
           });
         }
       }
     }
   }
+
 
   // 📚 LIST COURSES INTENT - Show all available courses in a numbered list
   if (intent === 'list_courses') {

@@ -49,6 +49,7 @@ const cors = require('cors');                         // Enable CORS for webhook
 const crypto = require('crypto');                     // For webhook signature verification
 const { SessionsClient } = require('@google-cloud/dialogflow'); // Google's AI service
 const metaApi = require('./meta-api');                // Meta Cloud API integration
+const { domainDefinitions, getDomainResponse, isDomainSelection } = require('./domain-definitions'); // Shared domain definitions
 
 // 🔧 DIALOGFLOW SETUP
 // Dialogflow is Google's AI service that understands natural language
@@ -458,68 +459,8 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           // Use the already extracted courseNumber as domainNumber
           const domainNumber = courseNumber;
           
-          const domainDefinitions = {
-            1: {
-              name: "Aerodrome Design, Operations, Planning & Engineering",
-              courses: [
-                "Global reporting Format",
-                "Basic principles of Aerodrome Safeguarding(NOC)",
-                "Airport Emergency Planning  & Disabled Aircraft Removal",
-                "Infrastructure and facilities for Passengers with reduced mobilities",
-                "Aerdrome Design & Operations(Annex-14)",
-                "Aerodrome Licensing",
-                "Airfield pavement Marking(APM)",
-                "Wildlife Hazard Management",
-                "Airfield Signs"
-              ]
-            },
-            2: {
-              name: "Safety, Security & Compliance",
-              courses: [
-                "Safety Management System(SMS)",
-                "Aviation Cyber Security",
-                "Human Factors "
-              ]
-            },
-            3: {
-              name: "Data Analysis, Decision Making, Innovation & Technology",
-              courses: [
-                "Data Analytics using Power Bi",
-                "Advance Excel & Power BI ",
-                "Design Thinking for nuturing innovation"
-              ]
-            },
-            4: {
-              name: "Leadership, Management & Professional Development",
-              courses: [
-                "Planning for Retirement",
-                "Stress Management",
-                "System Engineering and Project Management",
-                "Delegation of Power(DOP) & Budget Preparation",
-                "Prevention of Sexual Harrasment (POSH) Workshop"
-              ]
-            },
-            5: {
-              name: "Stakeholder and Contract Management",
-              courses: [
-                "Industrial Relations and Stakeholder management",
-                "GeM Procurement"
-              ]
-            },
-            6: {
-              name: "Financial Management & Auditing",
-              courses: [
-                "Accounting & Internal Audit"
-              ]
-            }
-          };
-
           const domain = domainDefinitions[courseNumber];
           if (domain) {
-            const courseList = domain.courses.map((course, idx) => 
-              `${idx + 1}. ${course}`
-            ).join('\n\n');
-
             // 🎯 STORE USER CONTEXT - Remember which domain user selected for course number handling
             userContext.set(userId, {
               domainNumber: courseNumber,
@@ -528,7 +469,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
               timestamp: Date.now()
             });
 
-            const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+            const response = getDomainResponse(domain, courseNumber);
             
             const result = await metaApi.sendMessageWithRetry(from, response);
             
@@ -588,7 +529,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           return res.status(200).send('OK');
         }
       }
-    }
+    }  
 
     // 🚨 SHOW ALL COURSES COMMAND - Handle when user wants to see all course categories
     if (incomingMsg.toLowerCase().includes('show all courses') || incomingMsg.toLowerCase().includes('list all courses')) {
@@ -818,21 +759,10 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           // Handle domain/category selection using existing domain definitions
           const domainNumber = parseInt(queryResult.parameters.domain_number) || 1;
           
-          // Define domain definitions for Dialogflow intents
-          const dialogflowDomainDefinitions = {
-            1: { name: "Aerodrome Design, Operations, Planning & Engineering", courses: ["Global reporting Format", "Basic principles of Aerodrome Safeguarding(NOC)", "Airport Emergency Planning  & Disabled Aircraft Removal", "Infrastructure and facilities for Passengers with reduced mobilities", "Aerdrome Design & Operations(Annex-14)", "Aerodrome Licensing", "Airfield pavement Marking(APM)", "Wildlife Hazard Management", "Airfield Signs"] },
-            2: { name: "Safety, Security & Compliance", courses: ["Safety Management System(SMS)", "Aviation Cyber Security", "Human Factors "] },
-            3: { name: "Data Analysis, Decision Making, Innovation & Technology", courses: ["Data Analytics using Power Bi", "Advance Excel & Power BI ", "Design Thinking for nuturing innovation"] },
-            4: { name: "Leadership, Management & Professional Development", courses: ["Planning for Retirement", "Stress Management", "System Engineering and Project Management", "Delegation of Power(DOP) & Budget Preparation", "Prevention of Sexual Harrasment (POSH) Workshop"] },
-            5: { name: "Stakeholder and Contract Management", courses: ["Industrial Relations and Stakeholder management", "GeM Procurement"] },
-            6: { name: "Financial Management & Auditing", courses: ["Accounting & Internal Audit"] }
-          };
-          
           if (domainNumber >= 1 && domainNumber <= 6) {
-            const domain = dialogflowDomainDefinitions[domainNumber];
+            const domain = domainDefinitions[domainNumber];
             if (domain) {
-              const courseList = domain.courses.map((course, idx) => `${idx + 1}. ${course}`).join('\n\n');
-              dialogflowResponse = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Gem Procurement", "Power Bi", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+              dialogflowResponse = getDomainResponse(domain, domainNumber);
             } else {
               dialogflowResponse = `❌ Sorry, domain ${domainNumber} not found. Please try "show all courses" to see available domains.`;
             }
@@ -1175,68 +1105,8 @@ const handleWebhook = async (req, res) => {
                 // Process domain selection directly
                 const domainNumber = courseNumber;
                 
-                const domainDefinitions = {
-                  1: {
-                    name: "Aerodrome Design, Operations, Planning & Engineering",
-                    courses: [
-                      "Global reporting Format",
-                      "Basic principles of Aerodrome Safeguarding(NOC)",
-                      "Airport Emergency Planning  & Disabled Aircraft Removal",
-                      "Infrastructure and facilities for Passengers with reduced mobilities",
-                      "Aerdrome Design & Operations(Annex-14)",
-                      "Aerodrome Licensing",
-                      "Airfield pavement Marking(APM)",
-                      "Wildlife Hazard Management",
-                      "Airfield Signs"
-                    ]
-                  },
-                  2: {
-                    name: "Safety, Security & Compliance",
-                    courses: [
-                      "Safety Management System(SMS)",
-                      "Aviation Cyber Security",
-                      "Human Factors "
-                    ]
-                  },
-                  3: {
-                    name: "Data Analysis, Decision Making, Innovation & Technology",
-                    courses: [
-                      "Data Analytics using Power Bi",
-                      "Advance Excel & Power BI ",
-                      "Design Thinking for nuturing innovation"
-                    ]
-                  },
-                  4: {
-                    name: "Leadership, Management & Professional Development",
-                    courses: [
-                      "Planning for Retirement",
-                      "Stress Management",
-                      "System Engineering and Project Management",
-                      "Delegation of Power(DOP) & Budget Preparation",
-                      "Prevention of Sexual Harrasment (POSH) Workshop"
-                    ]
-                  },
-                  5: {
-                    name: "Stakeholder and Contract Management",
-                    courses: [
-                      "Industrial Relations and Stakeholder management",
-                      "GeM Procurement"
-                    ]
-                  },
-                  6: {
-                    name: "Financial Management & Auditing",
-                    courses: [
-                      "Accounting & Internal Audit"
-                    ]
-                  }
-                };
-                
                 const domain = domainDefinitions[domainNumber];
                 if (domain) {
-                  const courseList = domain.courses.map((course, idx) => 
-                    `${idx + 1}. ${course}`
-                  ).join('\n\n');
-                  
                   // Store user context
                   userContext.set(userId, {
                     domainNumber: domainNumber,
@@ -1245,7 +1115,7 @@ const handleWebhook = async (req, res) => {
                     timestamp: Date.now()
                   });
                   
-                  const response = `📚 *${domain.name}*\n\n${courseList}\n\n💡 *How to use:*\n• Numbers (1-6) work for domain selection only\n• For course information, type course name (full recommended or partial)\n• Examples: "Global reporting format", "Gem Procurement", "Safety Management System"\n• Ask about specific details like fees, dates, or coordinators\n• Type "show all courses" to see all domains\n\nTotal courses in this domain: ${domain.courses.length}`;
+                  const response = getDomainResponse(domain, domainNumber);
                   
                   // Send response via Meta API
                   const result = await metaApi.sendMessageWithRetry(from, response);
@@ -1581,6 +1451,75 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         } else {
           console.error('❌ Failed to send Dialogflow response:', result.error);
           return res.status(500).send('Error sending response');
+        }
+      }
+      
+      // 🤖 DIALOGFLOW WEBHOOK HANDLER - Handle responses from Dialogflow
+      if (req.body && req.body.responseId && req.body.queryResult) {
+        console.log('🤖 Dialogflow webhook detected');
+        console.log('🎯 Intent detected:', req.body.queryResult.intent.displayName);
+        
+        const queryResult = req.body.queryResult;
+        const intent = queryResult.intent.displayName;
+        const userText = queryResult.queryText;
+        const session = req.body.session;
+        
+        // Extract user phone number from session
+        const sessionMatch = session.match(/sessions\/(\d+)/);
+        const from = sessionMatch ? sessionMatch[1] : null;
+        
+        if (!from) {
+          console.error('❌ Could not extract user phone number from session');
+          return res.status(400).json({ error: 'Invalid session format' });
+        }
+        
+        console.log('📱 User phone number:', from);
+        console.log('💬 User text:', userText);
+        
+        // 🏷️ DIALOGFLOW FALLBACK INTERCEPTION - Handle domain selection when Dialogflow returns fallback
+        if (intent === 'Default Fallback Intent' && userText) {
+          console.log('🚨 DIALOGFLOW FALLBACK INTERCEPTED - Checking for domain selection');
+          
+          const numberMatch = userText.match(/^(course\s*)?(\d+)$/i);
+          const domainMatch = userText.toLowerCase().match(/^domain\s*(\d+)$/i);
+          
+          if (numberMatch || domainMatch) {
+            const courseNumber = numberMatch ? parseInt(numberMatch[2]) : parseInt(domainMatch[1]);
+            
+            // Check if this is a domain selection (1-6)
+            if ((courseNumber >= 1 && courseNumber <= 6 && userText.length === 1) || domainMatch) {
+              console.log('🏷️ DOMAIN SELECTION DETECTED IN DIALOGFLOW FALLBACK - Processing directly');
+              
+              const domain = domainDefinitions[courseNumber];
+              if (domain) {
+                const response = getDomainResponse(domain, courseNumber);
+                
+                const result = await metaApi.sendMessageWithRetry(from, response);
+                
+                if (result.success) {
+                  console.log('✅ Domain response sent successfully via Dialogflow fallback interception');
+                  return res.status(200).json({ fulfillmentText: 'Domain courses sent successfully' });
+                } else {
+                  console.error('❌ Failed to send domain response:', result.error);
+                  return res.status(500).json({ error: 'Failed to send response' });
+                }
+              }
+            }
+          }
+        }
+        
+        // If not a domain selection, let Dialogflow handle it normally
+        console.log('📤 Sending Dialogflow response to user');
+        const dialogflowResponse = queryResult.fulfillmentText || 'I received your message but couldn\'t process it properly.';
+        
+        const result = await metaApi.sendMessageWithRetry(from, dialogflowResponse);
+        
+        if (result.success) {
+          console.log('✅ Dialogflow response sent successfully');
+          return res.status(200).json({ fulfillmentText: 'Response sent successfully' });
+        } else {
+          console.error('❌ Failed to send Dialogflow response:', result.error);
+          return res.status(500).json({ error: 'Failed to send response' });
         }
       }
       
