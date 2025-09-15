@@ -964,6 +964,68 @@ function findCourseByName(name, courses) {
   return null; // Return null if no course found
 }
 
+// 🔍 EXTRACT COURSE NAMES FROM COMPARISON QUERY
+function extractCourseNamesFromComparison(query) {
+  const lowerQuery = query.toLowerCase();
+  const courseNames = [];
+  
+  // Handle "difference between X and Y" format
+  if (lowerQuery.includes('difference between')) {
+    const parts = lowerQuery.split('difference between')[1];
+    if (parts.includes(' and ')) {
+      const [first, second] = parts.split(' and ');
+      courseNames.push(first.trim());
+      courseNames.push(second.trim());
+    }
+  }
+  
+  // Handle "compare X and Y" format
+  if (lowerQuery.includes('compare')) {
+    const parts = lowerQuery.split('compare')[1];
+    if (parts.includes(' and ')) {
+      const [first, second] = parts.split(' and ');
+      courseNames.push(first.trim());
+      courseNames.push(second.trim());
+    }
+  }
+  
+  // Handle "X vs Y" format
+  if (lowerQuery.includes(' vs ')) {
+    const parts = lowerQuery.split(' vs ');
+    if (parts.length === 2) {
+      courseNames.push(parts[0].trim());
+      courseNames.push(parts[1].trim());
+    }
+  }
+  
+  // Handle "X versus Y" format
+  if (lowerQuery.includes(' versus ')) {
+    const parts = lowerQuery.split(' versus ');
+    if (parts.length === 2) {
+      courseNames.push(parts[0].trim());
+      courseNames.push(parts[1].trim());
+    }
+  }
+  
+  return courseNames;
+}
+
+// 📊 FORMAT COURSE COMPARISON RESPONSE
+function formatCourseComparison(course1, course2) {
+  return `📊 *Course Comparison: ${course1['प्रशिक्षण कार्यक्रम Programme']} vs ${course2['प्रशिक्षण कार्यक्रम Programme']}*\n\n` +
+         `**${course1['प्रशिक्षण कार्यक्रम Programme']}:**\n` +
+         `• Level: ${course1['प्रतिभागियो का स्तर Level of Participants']}\n` +
+         `• Duration: ${course1['दिवस संख्या Number of Days']} days\n` +
+         `• Batch Size: ${course1['बैच सईज़ Batch Size']}\n` +
+         `• Coordinator: ${course1['पाठ्यक्रम समन्वयक Course Coordinator']}\n\n` +
+         `**${course2['प्रशिक्षण कार्यक्रम Programme']}:**\n` +
+         `• Level: ${course2['प्रतिभागियो का स्तर Level of Participants']}\n` +
+         `• Duration: ${course2['दिवस संख्या Number of Days']} days\n` +
+         `• Batch Size: ${course2['बैच सईज़ Batch Size']}\n` +
+         `• Coordinator: ${course2['पाठ्यक्रम समन्वयक Course Coordinator']}\n\n` +
+         `💡 *Both courses are essential for aviation professionals but serve different purposes in airport operations.*`;
+}
+
 // 🔍 FIND COURSE BY PARTIAL NAME - Search for a course using partial name matching
 function findCourseByPartialName(partialName, courses) {
   const lowerCasePartial = partialName.toLowerCase().trim();
@@ -1222,12 +1284,53 @@ Thank you for reaching out to the Indian Aviation Academy!`;
           }
         }
 
+        // 🔍 COURSE COMPARISON HANDLER - Handle "difference between" queries
+        if (incomingMsg && 
+            (incomingMsg.toLowerCase().includes('difference between') || 
+             incomingMsg.toLowerCase().includes('compare') ||
+             incomingMsg.toLowerCase().includes('vs') ||
+             incomingMsg.toLowerCase().includes('versus'))) {
+          
+          try {
+            console.log('🔍 COURSE COMPARISON DETECTED:', incomingMsg);
+            
+            // Extract course names from the query
+            const courseNames = extractCourseNamesFromComparison(incomingMsg);
+            
+            if (courseNames.length >= 2) {
+              const course1 = findCourseByPartialName(courseNames[0], require('../data/courses.json'));
+              const course2 = findCourseByPartialName(courseNames[1], require('../data/courses.json'));
+              
+              if (course1 && course2) {
+                const comparisonResponse = formatCourseComparison(course1, course2);
+                const result = await metaApi.sendMessageWithRetry(from, comparisonResponse);
+                
+                if (result.success) {
+                  console.log('✅ Course comparison sent successfully');
+                  return res.status(200).send('OK');
+                }
+              }
+            }
+            
+            // If comparison fails, continue to Dialogflow
+            console.log('❌ Course comparison failed, continuing to Dialogflow');
+            
+          } catch (error) {
+            console.error('Error in course comparison:', error);
+            // Continue to Dialogflow if comparison fails
+          }
+        }
+
         // 📚 COURSE NAME RECOGNITION - Handle direct course name searches FIRST
         // Skip course search for greetings and commands
         if (incomingMsg && 
             incomingMsg.trim().length > 2 && 
             !incomingMsg.toLowerCase().includes('show all courses') &&
             !incomingMsg.toLowerCase().includes('domain') &&
+            !incomingMsg.toLowerCase().includes('difference between') &&
+            !incomingMsg.toLowerCase().includes('compare') &&
+            !incomingMsg.toLowerCase().includes('vs') &&
+            !incomingMsg.toLowerCase().includes('versus') &&
             incomingMsg.toLowerCase() !== 'hi' &&
             incomingMsg.toLowerCase() !== 'hello' &&
             incomingMsg.toLowerCase() !== 'hey' &&
