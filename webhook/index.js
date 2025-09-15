@@ -4,24 +4,24 @@
  * =============================================
  * 
  * 📚 WHAT THIS FILE DOES:
- * This is the main server file that handles WhatsApp messages coming from Twilio.
+ * This is the main server file that handles WhatsApp messages coming from Meta Cloud API.
  * It acts as a bridge between WhatsApp users and our chatbot system.
  * 
  * 🔄 HOW IT WORKS:
- * 1. User sends message on WhatsApp → Twilio receives it
- * 2. Twilio sends message to this webhook (our server)
+ * 1. User sends message on WhatsApp → Meta Cloud API receives it
+ * 2. Meta Cloud API sends message to this webhook (our server)
  * 3. We process the message and send back a response
- * 4. Twilio delivers our response back to WhatsApp
+ * 4. Meta Cloud API delivers our response back to WhatsApp
  * 
  * 🏗️ ARCHITECTURE:
  * - Express.js server (handles HTTP requests)
- * - Twilio integration (WhatsApp messaging)
+ * - Meta Cloud API integration (WhatsApp messaging)
  * - Dialogflow integration (AI understanding)
  * - Course data processing (from JSON files)
  * 
  * 📁 DEPENDENCIES:
  * - express: Web server framework
- * - twilio: WhatsApp messaging service
+ * - axios: HTTP client for Meta Cloud API
  * - @google-cloud/dialogflow: Google's AI chatbot service
  * - dotenv: Environment variable management
  * 
@@ -83,6 +83,7 @@ try {
 // Queue system to handle multiple users simultaneously without conflicts
 const requestQueue = new Map(); // Store pending requests per user to prevent race conditions
 const responseCache = new Map(); // Cache common responses to reduce Dialogflow API calls and improve performance
+const MAX_CACHE_SIZE = 1000; // 🛡️ PRODUCTION FIX: Limit cache size to prevent memory leaks and server crashes
 const MAX_RETRIES = 3; // Maximum retry attempts for Dialogflow API calls when rate limited
 const RETRY_DELAY = 1000; // Base delay between retries (1 second) - will increase exponentially
 
@@ -177,7 +178,7 @@ async function retryDialogflowRequest(request, maxRetries = MAX_RETRIES) {
 function getCachedResponse(key) {
   const cached = responseCache.get(key);
   if (cached && Date.now() - cached.timestamp < 300000) { // 5 minutes cache (300,000ms)
-    console.log(`📋 Using cached response for: ${key}`);
+    console.log(`📋 Using cached response for: ${key} (Cache size: ${responseCache.size}/${MAX_CACHE_SIZE})`);
     return cached.response;
   }
   return null; // No valid cached response found
@@ -185,11 +186,22 @@ function getCachedResponse(key) {
 
 // Store response in cache with timestamp for expiration tracking
 function setCachedResponse(key, response) {
+  // 🛡️ PRODUCTION FIX: Prevent memory leaks by limiting cache size
+  // This ensures the server won't crash due to unlimited cache growth
+  if (responseCache.size >= MAX_CACHE_SIZE) {
+    // Remove the oldest (first) entry when cache is full
+    // This implements a simple LRU (Least Recently Used) strategy
+    const oldestKey = responseCache.keys().next().value;
+    responseCache.delete(oldestKey);
+    console.log(`🗑️ Cache full, removed oldest entry: ${oldestKey}`);
+  }
+  
+  // Store the new response with timestamp
   responseCache.set(key, {
     response: response,
     timestamp: Date.now() // Store when this was cached
   });
-  console.log(`💾 Cached response for: ${key}`);
+  console.log(`💾 Cached response for: ${key} (Cache size: ${responseCache.size}/${MAX_CACHE_SIZE})`);
 }
 
 
@@ -1034,7 +1046,7 @@ const handleWebhook = async (req, res) => {
     
     // Handle GET requests (webhook verification)
     if (req.method === 'GET') {
-      const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || 'iaa_chatbot_verify_token_2024';
+      const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN ;//    || 'iaa_chatbot_verify_token_2024 ->changed by me'
       const mode = req.query['hub.mode'];
       const token = req.query['hub.verify_token'];
       const challenge = req.query['hub.challenge'];
@@ -1073,19 +1085,19 @@ const handleWebhook = async (req, res) => {
         console.log('📊 Message length:', incomingMsg ? incomingMsg.length : 'undefined');
         
         // 🧪 TEST MESSAGE HANDLER - For debugging and testing
-        if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
-          const testResponse = `🧪 *Test successful!*\n\nYour WhatsApp webhook is working correctly.\n\nMessage received: "${incomingMsg}"\nFrom: ${from} (${userName})\n\nNow try: "show all courses"`;
+        // if (incomingMsg && incomingMsg.toLowerCase() === 'test') {
+        //   const testResponse = `🧪 *Test successful!*\n\nYour WhatsApp webhook is working correctly.\n\nMessage received: "${incomingMsg}"\nFrom: ${from} (${userName})\n\nNow try: "show all courses"`;
           
-          const result = await metaApi.sendMessageWithRetry(from, testResponse);
+        //   const result = await metaApi.sendMessageWithRetry(from, testResponse);
           
-          if (result.success) {
-            console.log('✅ Test response sent successfully');
-            return res.status(200).send('OK');
-          } else {
-            console.error('❌ Failed to send test response:', result.error);
-            return res.status(500).json({ error: 'Internal server error' });
-          }
-        }
+        //   if (result.success) {
+        //     console.log('✅ Test response sent successfully');
+        //     return res.status(200).send('OK');
+        //   } else {
+        //     console.error('❌ Failed to send test response:', result.error);
+        //     return res.status(500).json({ error: 'Internal server error' });
+        //   }
+        // }
          
         // 👋 GREETING HANDLER - Handle basic greetings directly (bypasses Dialogflow)
         if (incomingMsg && (incomingMsg.toLowerCase() === 'hi' || incomingMsg.toLowerCase() === 'hello' || incomingMsg.toLowerCase() === 'hey')) {
@@ -1195,8 +1207,7 @@ Thank you for reaching out to the Indian Aviation Academy!`;
         const isGoodbyeMessage = goodbyeKeywords.some(keyword => 
           incomingMsg.toLowerCase().includes(keyword.toLowerCase())
         );
-        
-        if (isGoodbyeMessage) {
+                if (isGoodbyeMessage) {
           console.log('🎉 GOODBYE DETECTED - Sending farewell response');
           const goodbyeResponse = `🎉 *Thank you for contacting Indian Aviation Academy!*\n\n✨ *Happy to serve you, ${userName}!* ✨\n\n🌟 *Hope you had a smooth interaction with me!* 🌟\n\n📚 *Remember:*\n• I'm always here to help with course information\n• Feel free to ask about any training programs\n• Contact us anytime for assistance\n\n🚀 *Wishing you success in your aviation journey!*\n\n*Best regards,*\n*IAA Support Team* 🛩️\n\n*--- End of Conversation ---*`;
           

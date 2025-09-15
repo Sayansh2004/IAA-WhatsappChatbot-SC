@@ -1,107 +1,81 @@
-# Dependencies
+# 🚀 PRODUCTION DEPLOYMENT - IAA WhatsApp Chatbot
+# This .gitignore ensures only essential code files are pushed to production
+
+# 📚 Documentation Files (EXCLUDE from production)
+*.md
+*.txt
+*.docx
+*.pdf
+
+# 📊 Project Explanation Files (EXCLUDE from production)
+*_DOCUMENTATION.md
+*_GUIDE.md
+*_EXPLANATION.md
+*ROADMAP.md
+*FLOW.md
+*FEEDBACK*.md
+*SETUP*.md
+*LEARNING*.md
+*PACKAGE*.md
+*VERCEL*.md
+
+# 📁 Specific Documentation Files (EXCLUDE from production)
+15_DAY_LEARNING_ROADMAP.md
+IAA_FEEDBACK_SYSTEM_DOCUMENTATION.md
+LEARNING_GUIDE.md
+PACKAGE_JSON_EXPLANATION.md
+PROJECT_FLOW.md
+README.md
+sameTimeUsers.md
+SETUP_GUIDE_FOR_BEGINNERS.md
+VERCEL_DEPLOYMENT_GUIDE.md
+
+# 📊 Excel Files (EXCLUDE from production)
+*.xlsx
+*.xls
+With_Link_Final_Training_Calendar_for_website_25-26(1).xlsx
+
+# 🔧 Development Files (EXCLUDE from production)
+scripts/
+convert_excel_to_json.js
+
+# 🗂️ Data Structure Documentation (EXCLUDE from production)
+data/COURSES_DATA_STRUCTURE.md
+
+# 🚫 Environment Files (EXCLUDE from production)
+.env
+.env.local
+.env.production
+.env.staging
+
+# 📦 Node Modules (EXCLUDE from production)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment variables
-.env
-.env.local
-.env.production
-.env.development
-
-# Logs
-*.log
-logs/
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
-coverage/
-
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
+# 🗂️ IDE Files (EXCLUDE from production)
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# Temporary files
-*.tmp
-*.temp
+# 📁 OS Files (EXCLUDE from production)
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# Project explanation and documentation files (not to be pushed to GitHub)
-README.md
-PROJECT_FLOW.md
-LEARNING_GUIDE.md
-SETUP_GUIDE_FOR_BEGINNERS.md
-PACKAGE_JSON_EXPLANATION.md
-COURSES_DATA_STRUCTURE.md
-IAA_FEEDBACK_SYSTEM_DOCUMENTATION.md
-sameTimeUsers.md
-VERCEL_DEPLOYMENT_GUIDE.md
-DEPLOYMENT_SUMMARY.md
-*.md
-*.txt
+# 🚫 Log Files (EXCLUDE from production)
+*.log
+logs/
+
+# 🗂️ Temporary Files (EXCLUDE from production)
+tmp/
+temp/
+.tmp/
+
+# 📊 Backup Files (EXCLUDE from production)
+*.bak
+*.backup
+*.old
