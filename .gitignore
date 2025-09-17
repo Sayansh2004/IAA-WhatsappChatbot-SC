@@ -7,28 +7,7 @@
 *.docx
 *.pdf
 
-# 📊 Project Explanation Files (EXCLUDE from production)
-*_DOCUMENTATION.md
-*_GUIDE.md
-*_EXPLANATION.md
-*ROADMAP.md
-*FLOW.md
-*FEEDBACK*.md
-*SETUP*.md
-*LEARNING*.md
-*PACKAGE*.md
-*VERCEL*.md
 
-# 📁 Specific Documentation Files (EXCLUDE from production)
-15_DAY_LEARNING_ROADMAP.md
-IAA_FEEDBACK_SYSTEM_DOCUMENTATION.md
-LEARNING_GUIDE.md
-PACKAGE_JSON_EXPLANATION.md
-PROJECT_FLOW.md
-README.md
-sameTimeUsers.md
-SETUP_GUIDE_FOR_BEGINNERS.md
-VERCEL_DEPLOYMENT_GUIDE.md
 
 # 📊 Excel Files (EXCLUDE from production)
 *.xlsx
