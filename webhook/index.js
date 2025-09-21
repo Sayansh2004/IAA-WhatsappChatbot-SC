@@ -1111,8 +1111,25 @@ app.listen(PORT, () => {
 
 // 🚀 HANDLE WEBHOOK FUNCTION - For Vercel serverless deployment
 async function handleWebhook(req, res) {
-  // Route to the main webhook handler
-  return app(req, res);
+  try {
+    console.log('🚀 handleWebhook called:', req.method, req.url);
+    
+    // Update the URL to match the expected webhook endpoint
+    req.url = '/meta-webhook';
+    
+    // Route to the main webhook handler
+    if (req.method === 'GET') {
+      return metaApi.verifyWebhook(req, res);
+    } else if (req.method === 'POST') {
+      // Call the main webhook handler directly
+      return app._router.handle(req, res);
+    } else {
+      return res.status(404).json({ error: 'Not found' });
+    }
+  } catch (error) {
+    console.error('❌ handleWebhook error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 // Export the main Express app for Vercel serverless deployment
