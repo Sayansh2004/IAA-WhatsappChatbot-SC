@@ -1109,5 +1109,11 @@ app.listen(PORT, () => {
   console.log(`🔧 Meta API config valid: ${metaApi.validateMetaConfig()}`);
 });
 
+// 🚀 HANDLE WEBHOOK FUNCTION - For Vercel serverless deployment
+async function handleWebhook(req, res) {
+  // Route to the main webhook handler
+  return app(req, res);
+}
+
 // Export the main Express app for Vercel serverless deployment
-module.exports = app;
+module.exports = { app, handleWebhook };
