@@ -1,7 +1,7 @@
 {
   "name": "iaa-chatbot",
   "version": "1.0.0",
-  "description": "WhatsApp chatbot for Indian Aviation Academy using Dialogflow ES, Node.js, and Meta Cloud API.",
+  "description": "WhatsApp chatbot for Indian Aviation Academy using Node.js, Express.js, and Meta Cloud API with string-based response matching.",
   "main": "webhook/index.js",
   "engines": {
     "node": ">=18.0.0"
@@ -13,15 +13,13 @@
     "convert-data": "node scripts/convert_excel_to_json.js"
   },
   "dependencies": {
-    "@google-cloud/dialogflow": "^6.0.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "dialogflow-fulfillment": "^0.6.1",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "localtunnel": "^2.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^7.1.0",
     "mongoose": "^8.3.4",
     "xlsx": "^0.18.5"
   }

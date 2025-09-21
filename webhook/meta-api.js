@@ -122,20 +122,21 @@ async function sendWhatsAppMessage(to, message, messageType = 'text') {
           body: message
         }
       };
-    } else if (messageType === 'template') {
-      payload = {
-        messaging_product: 'whatsapp',
-        to: to,
-        type: 'template',
-        template: {
-          name: message.templateName,
-          language: {
-            code: message.languageCode || 'en'
-          },
-          components: message.components || []
-        }
-      };
-    }
+     } 
+    // else if (messageType === 'template') {
+    //   payload = {
+    //     messaging_product: 'whatsapp',
+    //     to: to,
+    //     type: 'template',
+    //     template: {
+    //       name: message.templateName,
+    //       language: {
+    //         code: message.languageCode || 'en'
+    //       },
+    //       components: message.components || []
+    //     }
+    //   };
+    // }
 
     // Send the message via Meta Graph API
     const response = await axios.post(
@@ -247,32 +248,32 @@ async function sendMessageWithRetry(to, message, messageType = 'text', retries =
  * 📊 GET MESSAGE STATUS
  * Gets the delivery status of a sent message
  */
-async function getMessageStatus(messageId) {
-  try {
-    const response = await axios.get(
-      `${META_CONFIG.GRAPH_API_BASE}/${messageId}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${META_CONFIG.ACCESS_TOKEN}`
-        },
-        timeout: META_CONFIG.REQUEST_TIMEOUT
-      }
-    );
+// async function getMessageStatus(messageId) {
+//   try {
+//     const response = await axios.get(
+//       `${META_CONFIG.GRAPH_API_BASE}/${messageId}`,
+//       {
+//         headers: {
+//           'Authorization': `Bearer ${META_CONFIG.ACCESS_TOKEN}`
+//         },
+//         timeout: META_CONFIG.REQUEST_TIMEOUT
+//       }
+//     );
 
-    return {
-      success: true,
-      status: response.data.statuses?.[0]?.status,
-      data: response.data
-    };
+//     return {
+//       success: true,
+//       status: response.data.statuses?.[0]?.status,
+//       data: response.data
+//     };
 
-  } catch (error) {
-    console.error('❌ Error getting message status:', error.response?.data || error.message);
-    return {
-      success: false,
-      error: error.response?.data || error.message
-    };
-  }
-}
+//   } catch (error) {
+//     console.error('❌ Error getting message status:', error.response?.data || error.message);
+//     return {
+//       success: false,
+//       error: error.response?.data || error.message
+//     };
+//   }
+// }
 
 /**
  * 🔧 VALIDATE CONFIGURATION
@@ -300,31 +301,31 @@ function validateMetaConfig() {
  * 📋 GET BUSINESS PROFILE
  * Gets the WhatsApp Business profile information
  */
-async function getBusinessProfile() {
-  try {
-    const response = await axios.get(
-      `${META_CONFIG.GRAPH_API_BASE}/${META_CONFIG.PHONE_NUMBER_ID}/whatsapp_business_profile`,
-      {
-        headers: {
-          'Authorization': `Bearer ${META_CONFIG.ACCESS_TOKEN}`
-        },
-        timeout: META_CONFIG.REQUEST_TIMEOUT
-      }
-    );
+// async function getBusinessProfile() {
+//   try {
+//     const response = await axios.get(
+//       `${META_CONFIG.GRAPH_API_BASE}/${META_CONFIG.PHONE_NUMBER_ID}/whatsapp_business_profile`,
+//       {
+//         headers: {
+//           'Authorization': `Bearer ${META_CONFIG.ACCESS_TOKEN}`
+//         },
+//         timeout: META_CONFIG.REQUEST_TIMEOUT
+//       }
+//     );
 
-    return {
-      success: true,
-      profile: response.data
-    };
+//     return {
+//       success: true,
+//       profile: response.data
+//     };
 
-  } catch (error) {
-    console.error('❌ Error getting business profile:', error.response?.data || error.message);
-    return {
-      success: false,
-      error: error.response?.data || error.message
-    };
-  }
-}
+//   } catch (error) {
+//     console.error('❌ Error getting business profile:', error.response?.data || error.message);
+//     return {
+//       success: false,
+//       error: error.response?.data || error.message
+//     };
+//   }
+// }
 
 // Export all functions
 module.exports = {
@@ -333,8 +334,8 @@ module.exports = {
   sendWhatsAppMessage,
   sendMessageWithRetry,
   processIncomingMessage,
-  getMessageStatus,
+  // getMessageStatus,
   validateMetaConfig,
-  getBusinessProfile,
+  // getBusinessProfile,
   META_CONFIG
 };
