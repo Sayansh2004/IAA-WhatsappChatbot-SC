@@ -1,11 +1,11 @@
-# 🚀 IAA WHATSAPP CHATBOT - COMPLETE BEGINNER'S GUIDE
+# 🚀 WHATSAPP CHATBOT - COMPLETE BEGINNER'S GUIDE
 
 ## 📚 WHAT IS THIS PROJECT?
 
-A **WhatsApp chatbot** for the **Indian Aviation Academy (IAA)** that helps users get information about training programs, courses, fees, dates, and more. Think of it as a **smart virtual assistant** that works on WhatsApp!
+A **WhatsApp chatbot** that helps users get information about training programs, courses, fees, dates, and more. Think of it as a **smart virtual assistant** that works on WhatsApp!
 
 ### 🎯 **For Complete Beginners:**
-This is a **real-world project** that's actually being used by an aviation academy. It's not just a tutorial - it's a production-ready chatbot that handles real users asking real questions about training courses.
+This is a **real-world project** that demonstrates how to build a production-ready chatbot that handles real users asking questions about training courses.
 
 ### 🤔 **What Does "Chatbot" Mean?**
 A chatbot is like having a **smart assistant** that can:
@@ -14,8 +14,8 @@ A chatbot is like having a **smart assistant** that can:
 - Work 24/7 without getting tired
 - Handle multiple people at the same time
 
-### 🏢 **What is the Indian Aviation Academy (IAA)?**
-The IAA is a training institute that teaches aviation professionals. They offer courses like:
+### 🏢 **What is this for?**
+This chatbot is designed for training institutes that offer courses like:
 - Airport operations
 - Safety management
 - Leadership training
@@ -29,11 +29,11 @@ The IAA is a training institute that teaches aviation professionals. They offer 
 4. **The person gets their answer** instantly, without waiting for a human
 
 ### 🌟 **Why This Project is Special:**
-- ✅ **Real-world application** - Actually used by real people
+- ✅ **Real-world application** - Demonstrates practical implementation
 - ✅ **Production-ready** - Handles real users and real traffic
 - ✅ **Well-documented** - Easy to understand and learn from
 - ✅ **Beginner-friendly** - Multiple learning levels available
-- ✅ **Modern technology** - Uses the latest AI and messaging APIs
+- ✅ **Modern technology** - Uses the latest messaging APIs
 
 ## 🎯 WHAT DOES IT DO?
 
@@ -80,70 +80,35 @@ The IAA is a training institute that teaches aviation professionals. They offer 
 ├── /webhook                    # 🚀 Main backend server folder
 │   ├── index.js               # 📥 Main webhook handler (WhatsApp messages)
 │   ├── index_beginner_friendly.js  # 📚 Beginner-friendly version for learning
-│   ├── dialogflow.js          # 🤖 Dialogflow webhook handler (COMMENTED OUT)
+│   ├── dialogflow.js          # 🤖 AI webhook handler (COMMENTED OUT)
 │   ├── domain-definitions.js  # 🏷️ Centralized domain definitions
 │   ├── meta-api.js            # 📱 Meta Cloud API integration
 │   └── .env                   # 🔐 Secret credentials (API keys)
 ├── /data                       # 📊 Course data and information
 │   ├── courses.json           # 📚 All course details (main database)
-│   ├── COURSES_DATA_STRUCTURE.md  # 📖 Detailed data explanation
 │   ├── category_entity.csv    # 🏷️ Course categories (LEGACY - not used)
 │   └── course_name_entity.csv # 📝 Course names (LEGACY - not used)
 ├── /scripts                    # 🛠️ Utility scripts
 │   └── convert_excel_to_json.js  # 📊 Convert Excel files to JSON
 ├── /public                     # 🌐 Static files (HTML, CSS, JS)
 ├── package.json                # 📦 Project dependencies and scripts
-├── PACKAGE_JSON_EXPLANATION.md # 📖 Detailed dependency explanation
-├── PROJECT_FLOW.md             # 🔄 Complete project workflow guide
 └── README.md                   # 📖 This file - project overview
 ```
 
-## 🎓 **COMPLETE BEGINNER'S LEARNING PATH**
+## 🎓 **GETTING STARTED**
 
-### **📚 Phase 1: Understanding the Basics (Week 1)**
-**Goal:** Understand what this project does and how it works
-
-1. **Start Here:** Read this README.md file completely
-2. **Then Read:** `LEARNING_GUIDE.md` - Your step-by-step learning roadmap
-3. **Then Read:** `PROJECT_FLOW.md` - How everything works together
-4. **Finally:** `SETUP_GUIDE_FOR_BEGINNERS.md` - How to set it up
-
-### **🔧 Phase 2: Understanding the Code (Week 2)**
-**Goal:** Learn how the code works
-
-1. **Start with:** `package.json` - What tools we need
-2. **Then:** `data/courses.json` - Our course database
-3. **Then:** `webhook/domain-definitions.js` - Simple, centralized logic
-4. **Finally:** `webhook/index.js` - The main brain (start with lines 1-200)
-
-### **🚀 Phase 3: Understanding Deployment (Week 3)**
-**Goal:** Learn how to put it online
-
-1. **Read:** `VERCEL_DEPLOYMENT_GUIDE.md` - How to deploy
-2. **Read:** `DEPLOYMENT_SUMMARY.md` - What we've built
-3. **Read:** `sameTimeUsers.md` - How we handle multiple users
-
-### **💡 Phase 4: Making Changes (Week 4+)**
-**Goal:** Start customizing and improving
-
-1. **Make small changes** to messages and responses
-2. **Add new courses** to the database
-3. **Test your changes** thoroughly
-4. **Ask questions** when you get stuck
-
-### **🎯 Learning Tips for Beginners:**
-- **Don't rush** - Take your time to understand each part
-- **Read the comments** - They explain what each line does
-- **Make small changes** - Test one thing at a time
-- **Ask questions** - Use ChatGPT to explain confusing parts
-- **Practice daily** - Even 30 minutes a day helps
+### **Quick Setup:**
+1. **Install dependencies:** `npm install`
+2. **Set up your credentials** in `.env` file
+3. **Start the server:** `npm start`
+4. **Test with WhatsApp** using the test commands below
 
 ## 🚀 QUICK START GUIDE
 
 ### **Step 1: Install Dependencies**
 ```bash
 # Navigate to project folder
-cd IAA_CHATBOT
+cd your-project-folder
 
 # Install all required packages
 npm install
@@ -152,24 +117,13 @@ npm install
 **What this does:** Downloads all the tools your project needs (like installing apps on your phone)
 
 ### **Step 2: Set Up Environment Variables**
-Create a `.env` file in the `/webhook` folder with:
+Create a `.env` file in the `/webhook` folder with your API credentials:
 ```env
-# Meta Cloud API Configuration
-META_ACCESS_TOKEN=your_meta_access_token
-META_PHONE_NUMBER_ID=your_phone_number_id
-META_BUSINESS_ACCOUNT_ID=your_business_account_id
-META_WEBHOOK_VERIFY_TOKEN=your_webhook_verify_token
-META_VERIFY_TOKEN=iaa_chatbot_verify_token_2024
-META_WEBHOOK_SECRET=your_webhook_secret
-
-# Google Cloud credentials
-GOOGLE_APPLICATION_CREDENTIALS=path/to/your/google-credentials.json
-
-# Dialogflow project ID (NOT USED - Dialogflow is disabled)
-# DIALOGFLOW_PROJECT_ID=iaa-whatsapp-chatbot-oytl
-
-# Server port
-PORT=3000
+# Add your API credentials here
+# META_ACCESS_TOKEN=your_token
+# META_PHONE_NUMBER_ID=your_phone_id
+# META_VERIFY_TOKEN=your_verify_token
+# PORT=3000
 ```
 
 ### **Step 3: Convert Excel Data to JSON**
@@ -204,10 +158,10 @@ node webhook/index_beginner_friendly.js
    - Domain-based course organization
    - Automatic fallback to registration form
 
-### **WhatsApp Integration (Meta Cloud API)**
-1. **Create Meta Developer Account**
+### **WhatsApp Integration**
+1. **Create API Developer Account**
 2. **Set up WhatsApp Business API**
-3. **Configure webhook URL** to point to your server (`/meta-webhook`)
+3. **Configure webhook URL** to point to your server
 4. **Set up webhook verification** with your verify token
 5. **Test with your WhatsApp Business number**
 
@@ -235,8 +189,8 @@ lt --port 3000
 - It matches user messages against predefined patterns and keywords
 - Example: "Tell me about SMS course" → System matches "SMS" to find Safety Management System
 
-### **What is Meta Cloud API?**
-- **Meta's official platform** for WhatsApp Business API
+### **What is WhatsApp Business API?**
+- **Official platform** for WhatsApp Business API
 - Acts as a bridge between WhatsApp and our server
 - Handles all the complex WhatsApp API stuff for us
 - Provides secure webhook verification and message handling
@@ -285,7 +239,7 @@ META_VERIFY_TOKEN=your_verify_token_here
 ```
 
 **If values are missing:**
-- Get them from your Meta Developer Dashboard
+- Get them from your API provider dashboard
 - Make sure there are no spaces around the `=` sign
 - Don't put quotes around the values
 
@@ -317,7 +271,7 @@ npm install
 **Solution:**
 1. Check your .env file exists
 2. Make sure all required values are set
-3. Get new credentials from Meta Developer Dashboard
+3. Get new credentials from your API provider
 
 #### **❌ "Webhook not reachable" Error**
 **What it means:** WhatsApp can't reach your server
@@ -371,8 +325,8 @@ curl http://localhost:3000/test
 curl http://localhost:3000/webhook
 ```
 
-#### **Verify Your Meta Configuration**
-1. Go to Meta Developer Dashboard
+#### **Verify Your API Configuration**
+1. Go to your API provider dashboard
 2. Check your webhook URL is correct
 3. Make sure you're subscribed to "messages" field
 4. Verify your access token is valid
@@ -441,7 +395,7 @@ POST /debug-webhook
 ## 🌟 PROJECT HIGHLIGHTS
 
 ### **What Makes This Special**
-- 🎯 **Real-world Application**: Actually used by an aviation academy
+- 🎯 **Real-world Application**: Demonstrates practical implementation
 - 🤖 **AI-Powered**: Uses cutting-edge natural language processing
 - 📱 **WhatsApp Integration**: Works on the world's most popular messaging app
 - 🏗️ **Scalable Architecture**: Easy to extend and modify
@@ -486,7 +440,6 @@ POST /debug-webhook
 ## 🆘 **NEED HELP?**
 
 - Check the troubleshooting section above
-- Look at the detailed documentation files
 - Test the debug endpoints
 - Check server logs for error messages
 
