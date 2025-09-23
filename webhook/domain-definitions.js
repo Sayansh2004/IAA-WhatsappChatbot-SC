@@ -27,7 +27,8 @@ const domainDefinitions = {
     courses: [
       "Safety Management System(SMS)",
       "Aviation Cyber Security",
-      "Human Factors"
+      "Human Factors",
+      "Demo"
     ]
   },
   3: {

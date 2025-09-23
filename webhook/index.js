@@ -860,6 +860,7 @@ function findCourseByPartialName(partialName, courses) {
   // 🎯 COMPREHENSIVE SHORT FORM MAPPING - Map ALL acronyms to full course names
   const shortFormMap = {
     // Core Aviation Acronyms
+    'dem':'Demo',
     'sms': 'Safety Management System(SMS)',
     'dop': 'Delegation of Power(DOP)',
     'rrr': 'Runway Rubber Removal',
