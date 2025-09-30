@@ -1937,8 +1937,8 @@
     "Total Course Fee (number of participants x training days)": 13224000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 10614000,
-    "Hostel Charges": "Single occupancy" = 3000+18% "GST"
-                      "Double occupancy" = 2000+18% "GST",
+    "Hostel Charges": "Single occupancy": "3000+18% GST"
+                      "Double occupancy": "2000+18% GST",
     "Remarks": "Not to be uploaded on IAA website",
     "Phone number": "9780412696, 8368094421",
     "email": "anas.shikh7827@gmail.com"
