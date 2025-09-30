@@ -16,7 +16,7 @@
     "Total Course Fee (number of participants x training days)": 13224000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 10614000,
-    "Hostel Charges": 4872000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Not to be uploaded on IAA website",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
@@ -37,7 +37,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -57,7 +57,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -77,7 +77,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -97,7 +97,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -117,7 +117,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -137,7 +137,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -157,7 +157,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -177,7 +177,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -197,7 +197,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -217,7 +217,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -237,7 +237,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9999791717",
     "email": "Padmarai@aai.aero"
   },
@@ -258,7 +258,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "Not available",
     "email": "Not available"
@@ -280,7 +280,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
@@ -302,7 +302,7 @@
     "Total Course Fee (number of participants x training days)": 912000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 732000,
-    "Hostel Charges": 192000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -323,7 +323,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -344,7 +344,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -365,7 +365,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -386,7 +386,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -407,7 +407,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -428,7 +428,7 @@
     "Total Course Fee (number of participants x training days)": 192000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 153000,
-    "Hostel Charges": 48000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
@@ -450,7 +450,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -471,7 +471,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -492,7 +492,7 @@
     "Total Course Fee (number of participants x training days)": 792000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 634500,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -513,7 +513,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
@@ -535,7 +535,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "8368094421",
     "email": "vaishali.r@aai.aero"
   },
@@ -556,7 +556,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -577,7 +577,7 @@
     "Total Course Fee (number of participants x training days)": 1102000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 884500,
-    "Hostel Charges": 406000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Not to be uploaded on IAA website",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
@@ -599,7 +599,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -620,7 +620,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -641,7 +641,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -662,7 +662,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9599700589",
     "email": "himanshi@AAI.AERO"
   },
@@ -683,7 +683,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -704,7 +704,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -725,7 +725,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
@@ -747,7 +747,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9599700589",
     "email": "himanshi@AAI.AERO"
   },
@@ -768,7 +768,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -789,7 +789,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -810,7 +810,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -831,7 +831,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Remarks": "Dates Changed",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
@@ -853,7 +853,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -874,7 +874,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -895,7 +895,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9810449975",
     "email": "ranbirs01@AAI.AERO"
   },
@@ -916,7 +916,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "Not available",
     "email": "Not available"
   },
@@ -937,7 +937,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9599700589",
     "email": "himanshi@AAI.AERO"
   },
@@ -958,7 +958,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -993,7 +993,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -1014,7 +1014,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9999791717",
     "email": "Padmarai@aai.aero"
   },
@@ -1035,7 +1035,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -1056,7 +1056,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1077,7 +1077,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1098,7 +1098,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9599700589",
     "email": "himanshi@AAI.AERO"
   },
@@ -1119,7 +1119,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9810449975",
     "email": "ranbirs01@AAI.AERO"
   },
@@ -1140,7 +1140,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1161,7 +1161,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -1182,7 +1182,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1203,7 +1203,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9999791717",
     "email": "Padmarai@aai.aero"
   },
@@ -1224,7 +1224,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1245,7 +1245,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1266,7 +1266,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1287,7 +1287,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1308,7 +1308,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -1329,7 +1329,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1350,7 +1350,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1371,7 +1371,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1392,7 +1392,7 @@
     "Total Course Fee (number of participants x training days)": 547200,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 439200,
-    "Hostel Charges": 115200,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1413,7 +1413,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges":"Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "Not available",
     "email": "Not available"
   },
@@ -1434,7 +1434,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -1455,7 +1455,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -1476,7 +1476,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9999791717",
     "email": "Padmarai@aai.aero"
   },
@@ -1497,7 +1497,7 @@
     "Total Course Fee (number of participants x training days)": 1320000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 7050,
     "Total course fees post 20 % group discount": 1057500,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9818802452",
     "email": "munesh@aai.aero"
   },
@@ -1518,7 +1518,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1539,7 +1539,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1560,7 +1560,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1581,7 +1581,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9810449975",
     "email": "ranbirs01@AAI.AERO"
   },
@@ -1602,7 +1602,7 @@
     "Total Course Fee (number of participants x training days)": 960000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 765000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1623,7 +1623,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9999791717",
     "email": "Padmarai@aai.aero"
   },
@@ -1644,7 +1644,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -1665,7 +1665,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1686,7 +1686,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1707,7 +1707,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "Not available",
     "email": "Not available"
   },
@@ -1728,7 +1728,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9414241224",
     "email": "kcmeena_fin@aai.aero"
   },
@@ -1749,7 +1749,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1770,7 +1770,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1791,7 +1791,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1812,7 +1812,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9780412696, 8368094421",
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
@@ -1833,7 +1833,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
@@ -1854,7 +1854,7 @@
     "Total Course Fee (number of participants x training days)": 684000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 549000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9968662275",
     "email": "mayank.singh.thakur@gmail.com"
   },
@@ -1875,7 +1875,7 @@
     "Total Course Fee (number of participants x training days)": 576000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": 144000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "8368094421",
     "email": "vaishali.r@aai.aero"
   },
@@ -1896,7 +1896,7 @@
     "Total Course Fee (number of participants x training days)": 1140000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
     "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": 240000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9810449975",
     "email": "ranbirs01@AAI.AERO"
   },
@@ -1917,7 +1917,7 @@
     "Total Course Fee (number of participants x training days)": 192000,
     "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
     "Total course fees post 20 % group discount": 153000,
-    "Hostel Charges": 48000,
+    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
     "Phone number": "9911424404, 9891918856",
     "email": "sushil@aai.aero, ajay18@iaa.edu.in"
   },
