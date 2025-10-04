@@ -1087,7 +1087,7 @@ function formatCourseInfo(course) {
 ⏱️ *Duration:* ${duration} days
 💰 *Fee per day:* ₹${feePerDay}
 💸 *Fee after group discount:* ₹${feeAfterDiscount}
-🏨 *Hostel Charges:* ₹${hostelCharges}
+🏨 *Hostel Charges:* ${hostelCharges}
 👨‍🏫 *Coordinator(s):* ${coordinator}
 🏷️ *Category:* ${category}
 📞 *Contact:* ${contact}
