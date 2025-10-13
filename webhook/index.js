@@ -1054,11 +1054,8 @@ function formatCourseInfo(course) {
     
     const courseName = getFieldValue('Programme') || 'N/A';
     const level = getFieldValue('Level of Participants') || 'N/A';
-    const startDate = getFieldValue('current month Start date') || getFieldValue('Start date') || 'N/A';
-    const endDate = getFieldValue('current month End Date') || getFieldValue('End Date') || 'N/A';
-    const nextStartDate = getFieldValue('next month Start date') || 'N/A';
-    const nextEndDate = getFieldValue('next month End date') || 'N/A';
-
+    const startDate = getFieldValue('Start date') || 'N/A';
+    const endDate = getFieldValue('End Date') || 'N/A';
     const duration = getFieldValue('Number of Days') || 'N/A';
     const feePerDay = getFieldValue('Course Fees (Per Day per participant)') || 'N/A';
     const feeAfterDiscount = getFieldValue('Course Fees Per Day Per Participant post 20 % group discount') || 'N/A';
@@ -1071,18 +1068,10 @@ function formatCourseInfo(course) {
     // Format dates if they are numbers (Excel serial dates)
     let formattedStartDate = startDate;
     let formattedEndDate = endDate;
-
-    let formattedNextStartDate=nextStartDate;
-    let formattedNextEndDate=nextEndDate;
     
-   if (typeof startDate === 'number' && startDate > 25569) {
+if (typeof startDate === 'number' && startDate > 25569) {
   const startDateObj = new Date((startDate - 25569) * 86400 * 1000);
   formattedStartDate = startDateObj.toLocaleDateString('en-GB');
-}
-
-if (typeof nextStartDate === 'number' && nextStartDate > 25569) {
-  const nextStartDateObj = new Date((nextStartDate - 25569) * 86400 * 1000);
-  formattedNextStartDate = nextStartDateObj.toLocaleDateString('en-GB');
 }
 
 if (typeof endDate === 'number' && endDate > 25569) {
@@ -1090,18 +1079,13 @@ if (typeof endDate === 'number' && endDate > 25569) {
   formattedEndDate = endDateObj.toLocaleDateString('en-GB');
 }
 
-if (typeof nextEndDate === 'number' && nextEndDate > 25569) {
-  const nextEndDateObj = new Date((nextEndDate - 25569) * 86400 * 1000);
-  formattedNextEndDate = nextEndDateObj.toLocaleDateString('en-GB');
-}
 
 
     const response = `📘 *Course Details:*
 
 🎯 *Name:* ${courseName}
 🧑‍🎓 *Level:* ${level}
-📅 *Date of Current Month:* ${formattedStartDate} to ${formattedEndDate}
-📅 *Date of Next Month:* ${formattedNextStartDate} to ${formattedNextEndDate}
+📅 *Dates:* ${formattedStartDate} to ${formattedEndDate}
 ⏱️ *Duration:* ${duration} days
 💰 *Fee per day:* ₹${feePerDay}
 💸 *Fee after group discount:* ₹${feeAfterDiscount}
