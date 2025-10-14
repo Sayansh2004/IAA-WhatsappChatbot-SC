@@ -112,8 +112,9 @@
     "Sl No.": 6,
     "प्रशिक्षण कार्यक्रम Programme": "Aviation Cyber Security",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46097,
-    "समाप्त तिथी /End Date": 46099,
+    "Upcoming Dates": [
+      { "start": 46097, "end": 46099 }
+    ],
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Mayank Singh",
@@ -132,8 +133,10 @@
     "Sl No.": 7,
     "प्रशिक्षण कार्यक्रम Programme": "System Engineering and Project Management",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46076,
-    "समाप्त तिथी /End Date": 46080,
+    "Upcoming Dates": [
+      { "start": 45992, "end": 45996 },
+      { "start": 46076, "end": 46080}
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Mayank Singh",
@@ -152,8 +155,10 @@
     "Sl No.": 8,
     "प्रशिक्षण कार्यक्रम Programme": "Aerdrome Design & Operations(Annex-14)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46076,
-    "समाप्त तिथी /End Date": 46080,
+    "Upcoming Dates": [
+      { "start": 45999, "end": 46003 },
+      { "start": 46076, "end": 46080}
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": " Pooja Bharti & Vaishali Rawat",
@@ -172,8 +177,10 @@
     "Sl No.": 9,
     "प्रशिक्षण कार्यक्रम Programme": "Delegation of Power(DOP) & Budget Preparation",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46076,
-    "समाप्त तिथी /End Date": 46080,
+    "Upcoming Dates": [
+      { "start": 45957, "end": 45961 },
+      { "start": 46076, "end": 46080}
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "K C Meena",
@@ -192,8 +199,9 @@
     "Sl No.": 10,
     "प्रशिक्षण कार्यक्रम Programme": "Infrastructure and facilities for Passengers with reduced mobilities",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all concerned cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45852,
-    "समाप्त तिथी /End Date": 45856,
+    "Upcoming Dates": [
+      { "start": 45852, "end": 45856 }
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Munesh Kumar ",
@@ -252,8 +260,10 @@
     "Sl No.": 13,
     "प्रशिक्षण कार्यक्रम Programme": "Basic principles of Aerodrome Safeguarding(NOC)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46027,
-    "समाप्त तिथी /End Date": 46029,
+    "Upcoming Dates": [
+      { "start": 46027, "end": 46029 },
+      { "start": 46076, "end": 46078}
+    ],
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "M. P Aggarwal",
@@ -359,8 +369,8 @@
     "Sl No.": 18,
     "प्रशिक्षण कार्यक्रम Programme": "Global reporting Format",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all concerned cadre (JE and above but upto AGM Level)",
-    "आरंभ तिथी /Start date": 45880,
-    "समाप्त तिथी /End Date": 45882,
+    "आरंभ तिथी /Start date": 45971,
+    "समाप्त तिथी /End Date": 45973,
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": " Pooja Bharti & Vaishali Rawat",
@@ -401,8 +411,8 @@
     "Sl No.": 20,
     "प्रशिक्षण कार्यक्रम Programme": "Prevention of Sexual Harrasment (POSH) Workshop",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45887,
-    "समाप्त तिथी /End Date": 45887,
+    "आरंभ तिथी /Start date": 46104,
+    "समाप्त तिथी /End Date": 46104,
     "दिवस संख्या Number of Days": 1,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Sushil Kumar and Ajay Kumar",
@@ -423,8 +433,8 @@
     "Sl No.": 21,
     "प्रशिक्षण कार्यक्रम Programme": "Advance Excel & Power BI ",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto AGM Level)",
-    "आरंभ तिथी /Start date": 45887,
-    "समाप्त तिथी /End Date": 45891,
+    "आरंभ तिथी /Start date": 46090,
+    "समाप्त तिथी /End Date": 46094,
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Mayank Singh",
@@ -486,8 +496,8 @@
     "Sl No.": 24,
     "प्रशिक्षण कार्यक्रम Programme": "Wildlife Hazard Management",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45901,
-    "समाप्त तिथी /End Date": 45903,
+    "आरंभ तिथी /Start date": 45992,
+    "समाप्त तिथी /End Date": 45994,
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": " Pooja Bharti & Vaishali Rawat",
@@ -527,27 +537,6 @@
   },
   {
     "Sl No.": 26,
-    "प्रशिक्षण कार्यक्रम Programme": "Planning for Retirement",
-    "प्रतिभागियो का स्तर Level of Participants": "Officers of all discipline Retiring within one year to five year from the date of the training ",
-    "आरंभ तिथी /Start date": 45901,
-    "समाप्त तिथी /End Date": 45903,
-    "दिवस संख्या Number of Days": 3,
-    "बैच सईज़ Batch Size": 30,
-    "पाठ्यक्रम समन्वयक Course Coordinator": "Sushil Kumar and Ajay Kumar",
-    "श्रेणी Category": "HR",
-    "Registration Link": "https://iaa.edu.in/course-detail/NjUw",
-    "Mandays": 90,
-    "Course Type ": "Others ",
-    " Course Fees (Per Day per participant) ": 6400,
-    "Total Course Fee (number of participants x training days)": 576000,
-    "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 5100,
-    "Total course fees post 20 % group discount": 459000,
-    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
-    "Phone number": "9911424404, 9891918856",
-    "email": "sushil@aai.aero, ajay18@aai.aero"
-  },
-  {
-    "Sl No.": 27,
     "प्रशिक्षण कार्यक्रम Programme": "Post OJT Evaluation for JE (Airport Operation services)",
     "प्रतिभागियो का स्तर Level of Participants": "Newly recruited JE (AOS) ",
     "आरंभ तिथी /Start date": 45908,
@@ -569,7 +558,7 @@
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
   {
-    "Sl No.": 28,
+    "Sl No.": 27,
     "प्रशिक्षण कार्यक्रम Programme": "Compliance of Labour Laws ",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 45908,
@@ -590,11 +579,11 @@
     "email": "sushil@aai.aero, ajay18@aai.aero"
   },
   {
-    "Sl No.": 29,
+    "Sl No.": 28,
     "प्रशिक्षण कार्यक्रम Programme": "Contract Management",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45915,
-    "समाप्त तिथी /End Date": 45919,
+    "आरंभ तिथी /Start date": 45971,
+    "समाप्त तिथी /End Date": 45975,
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Himanshi ",
@@ -611,32 +600,11 @@
     "email": "himanshi@aai.aero"
   },
   {
-    "Sl No.": 30,
-    "प्रशिक्षण कार्यक्रम Programme": "Delegation of Power(DOP) & Budget Preparation",
-    "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45915,
-    "समाप्त तिथी /End Date": 45919,
-    "दिवस संख्या Number of Days": 5,
-    "बैच सईज़ Batch Size": 30,
-    "पाठ्यक्रम समन्वयक Course Coordinator": "K C Meena",
-    "श्रेणी Category": "Finance ",
-    "Registration Link": "https://iaa.edu.in/course-detail/NzI2",
-    "Mandays": 150,
-    "Course Type ": "CTP",
-    " Course Fees (Per Day per participant) ": 7600,
-    "Total Course Fee (number of participants x training days)": 1140000,
-    "Course Fees Per Day Per Participant post 20 % group discount (rounded to nearest 50)": 6100,
-    "Total course fees post 20 % group discount": 915000,
-    "Hostel Charges": "Single occupancy: 3000 + 18% GST, Double occupancy: 2000 + 18% GST",
-    "Phone number": "9414241224",
-    "email": "kcmeena_fin@aai.aero"
-  },
-  {
-    "Sl No.": 31,
+    "Sl No.": 29,
     "प्रशिक्षण कार्यक्रम Programme": "Right To Information Act, 2005",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45922,
-    "समाप्त तिथी /End Date": 45924,
+    "आरंभ तिथी /Start date": 45971,
+    "समाप्त तिथी /End Date": 45973,
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Sushil Kumar and Ajay Kumar",
@@ -654,7 +622,7 @@
     "email": "sushil@aai.aero, ajay18@aai.aero"
   },
   {
-    "Sl No.": 32,
+    "Sl No.": 30,
     "प्रशिक्षण कार्यक्रम Programme": "Electrical & Mechanical (E&M) Installations,Maintenance and  Solar PV at Airports   ",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from Engg. Electrical cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 45922,
@@ -675,7 +643,7 @@
     "email": "himanshi@AAI.AERO"
   },
   {
-    "Sl No.": 33,
+    "Sl No.": 31,
     "प्रशिक्षण कार्यक्रम Programme": "Data Driven Decision Making",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto AGM Level)",
     "आरंभ तिथी /Start date": 46041,
@@ -696,7 +664,7 @@
     "email": "mayanksingh@iaa.edu.in"
   },
   {
-    "Sl No.": 34,
+    "Sl No.": 32,
     "प्रशिक्षण कार्यक्रम Programme": "Passenger Wayfinding signages(PWS)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all concerned cadre (JE and above but upto AGM Level)",
     "आरंभ तिथी /Start date": 45922,
@@ -717,7 +685,7 @@
     "email": "munesh@iaa.edu.in"
   },
   {
-    "Sl No.": 35,
+    "Sl No.": 33,
     "प्रशिक्षण कार्यक्रम Programme": "Goods and Services Tax & Statutory Taxation",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from Finance cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 46062,
@@ -739,7 +707,7 @@
     "email": "kcmeena_fin@aai.aero"
   },
   {
-    "Sl No.": 36,
+    "Sl No.": 34,
     "प्रशिक्षण कार्यक्रम Programme": "Mentorship and succession planning",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 45938,
@@ -760,11 +728,11 @@
     "email": "sushil@aai.aero, ajay18@aai.aero"
   },
   {
-    "Sl No.": 37,
+    "Sl No.": 35,
     "प्रशिक्षण कार्यक्रम Programme": "Airport Pavement Design,Evaluation & Maintenance",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from Engg. Civil cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45938,
-    "समाप्त तिथी /End Date": 45940,
+    "आरंभ तिथी /Start date": 46055,
+    "समाप्त तिथी /End Date": 46057,
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Ranbir",
@@ -781,7 +749,7 @@
     "email": "ranbirs01@AAI.AERO"
   },
   {
-    "Sl No.": 38,
+    "Sl No.": 36,
     "प्रशिक्षण कार्यक्रम Programme": "Heating ventilation(HV) & Air Conditioning(AC) And Energy conservation building code (ECBC)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from Engg. cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 45943,
@@ -802,7 +770,7 @@
     "email": "himanshi@AAI.AERO"
   },
   {
-    "Sl No.": 39,
+    "Sl No.": 37,
     "प्रशिक्षण कार्यक्रम Programme": " Airport Terminal Management",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto AGM Level)",
     "आरंभ तिथी /Start date": 45943,
@@ -823,11 +791,13 @@
     "email": "poojab@aai.aero, vaishali.r@aai.aero"
   },
   {
-    "Sl No.": 40,
+    "Sl No.": 48,
     "प्रशिक्षण कार्यक्रम Programme": "Runway Rubber Removal(RRR)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all concerned cadre (JE and above but upto AGM Level)",
-    "आरंभ तिथी /Start date": 45957,
-    "समाप्त तिथी /End Date": 45961,
+    "Upcoming Dates": [
+      { "start": 45957, "end": 45961 },
+      { "start": 46027, "end": 46031}
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Munesh Kumar ",
@@ -844,7 +814,7 @@
     "email": "munesh@iaa.edu.in"
   },
   {
-    "Sl No.": 41,
+    "Sl No.": 49,
     "प्रशिक्षण कार्यक्रम Programme": "Effective Presentation and Communication skills",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
     "आरंभ तिथी /Start date": 45957,
