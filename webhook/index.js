@@ -1095,7 +1095,7 @@ function formatCourseInfo(course) {
 
 🎯 *Name:* ${courseName}
 🧑‍🎓 *Level:* ${level}
-📅 *Dates:* ${formattedStartDate} to ${formattedEndDate}
+📅 *Dates:* ${datesStr}
 ⏱️ *Duration:* ${duration} days
 💰 *Fee per day:* ₹${feePerDay}
 💸 *Fee after group discount:* ₹${feeAfterDiscount}
