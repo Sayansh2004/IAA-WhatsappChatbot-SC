@@ -1040,6 +1040,18 @@ function findCourseByPartialName(partialName, courses) {
   return null; // Return null if no course found
 }
 
+// Add a Date Formatting Helper
+function formatDateDMY(date) {
+  if (typeof date === 'number' && date > 25569) {
+    const d = new Date((date - 25569) * 86400 * 1000);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = String(d.getFullYear()).slice(-2);
+    return `${day}/${month}/20${year}`;
+  }
+  return date;
+}
+
 // REMOVED COMPLEX EXTRACTION FUNCTION - Using simple direct search only
 
 // 📋 FORMAT COURSE INFO - Convert course data to formatted message
