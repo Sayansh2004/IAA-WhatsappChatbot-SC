@@ -26,8 +26,8 @@
     "प्रशिक्षण कार्यक्रम Programme": "Planning for Retirement",
     "प्रतिभागियो का स्तर Level of Participants": "Officers of all discipline Retiring within one year to five year from the date of the training ",
     "Upcoming Dates": [
-      { "start": 46006, "end": 46010 },
-      { "start": 46043, "end": 46047 }
+      { "start": 45999, "end": 46001 },
+      { "start": 46090, "end": 46092 }
     ],
     "दिवस संख्या Number of Days": 3,
     "बैच सईज़ Batch Size": 30,
@@ -47,10 +47,11 @@
     "Sl No.": 3,
     "प्रशिक्षण कार्यक्रम Programme": "Aerodrome Licensing",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all concerned cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45840,
-    "समाप्त तिथी /End Date": 45842,
-    "दिवस संख्या Number of Days": 3,
-    "बैच सईज़ Batch Size": 30,
+    "आरंभ तिथी /Start date": 46041,
+    "समाप्त तिथी /End Date": 46043,
+    "Upcoming Dates": [
+      { "start": 46041, "end": 46043 }
+    ],
     "पाठ्यक्रम समन्वयक Course Coordinator": " Pooja Bharti & Vaishali Rawat",
     "श्रेणी Category": "Operations",
     "Mandays": 90,
@@ -67,8 +68,10 @@
     "Sl No.": 4,
     "प्रशिक्षण कार्यक्रम Programme": "Safety Management System(SMS)",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 46006,
-    "समाप्त तिथी /End Date": 46010,
+    "Upcoming Dates": [
+      { "start": 45915, "end": 45919 },
+      { "start": 46006, "end": 46010 }
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": " Pooja Bharti & Vaishali Rawat",
@@ -87,8 +90,10 @@
     "Sl No.": 5,
     "प्रशिक्षण कार्यक्रम Programme": "GeM Procurement",
     "प्रतिभागियो का स्तर Level of Participants": "Executives  from all cadre (JE and above but upto Jt.GM Level)",
-    "आरंभ तिथी /Start date": 45845,
-    "समाप्त तिथी /End Date": 45849,
+    "Upcoming Dates": [
+      { "start": 45845, "end": 45849 },
+      { "start": 45908, "end": 45912 }
+    ],
     "दिवस संख्या Number of Days": 5,
     "बैच सईज़ Batch Size": 30,
     "पाठ्यक्रम समन्वयक Course Coordinator": "Munesh Kumar ",
