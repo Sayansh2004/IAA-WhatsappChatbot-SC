@@ -1066,8 +1066,7 @@ function formatCourseInfo(course) {
     
     const courseName = getFieldValue('Programme') || 'N/A';
     const level = getFieldValue('Level of Participants') || 'N/A';
-    const startDate = getFieldValue('Start date') || 'N/A';
-    const endDate = getFieldValue('End Date') || 'N/A';
+
     const duration = getFieldValue('Number of Days') || 'N/A';
     const feePerDay = getFieldValue('Course Fees (Per Day per participant)') || 'N/A';
     const feeAfterDiscount = getFieldValue('Course Fees Per Day Per Participant post 20 % group discount') || 'N/A';
@@ -1077,19 +1076,18 @@ function formatCourseInfo(course) {
     const contact = getFieldValue('Phone number') || 'N/A';
     const email = getFieldValue('email') || 'N/A';
    
-    // Format dates if they are numbers (Excel serial dates)
-    let formattedStartDate = startDate;
-    let formattedEndDate = endDate;
     
-if (typeof startDate === 'number' && startDate > 25569) {
-  const startDateObj = new Date((startDate - 25569) * 86400 * 1000);
-  formattedStartDate = startDateObj.toLocaleDateString('en-GB');
-}
-
-if (typeof endDate === 'number' && endDate > 25569) {
-  const endDateObj = new Date((endDate - 25569) * 86400 * 1000);
-  formattedEndDate = endDateObj.toLocaleDateString('en-GB');
-}
+    let datesStr = '';
+    const upcomingDates = course['Upcoming Dates'];
+    if (Array.isArray(upcomingDates) && upcomingDates.length > 0) {
+      datesStr = upcomingDates.map(
+        d => `${formatDateDMY(d.start)} to ${formatDateDMY(d.end)}`
+      ).join(' and ');
+    } else {
+      const startDate = getFieldValue('Start date') || 'N/A';
+      const endDate = getFieldValue('End Date') || 'N/A';
+      datesStr = `${formatDateDMY(startDate)} to ${formatDateDMY(endDate)}`;
+    }
 
 
 
