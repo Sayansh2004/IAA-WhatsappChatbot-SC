@@ -1052,6 +1052,14 @@ function formatDateDMY(date) {
   return date;
 }
 
+// Add this helper to check if a date is in the future
+function isFutureOrToday(excelSerialDate) {
+  const today = new Date();
+  const date = new Date((excelSerialDate - 25569) * 86400 * 1000);
+  // Compare only date part, ignore time
+  return date >= new Date(today.getFullYear(), today.getMonth(), today.getDate());
+}
+
 // REMOVED COMPLEX EXTRACTION FUNCTION - Using simple direct search only
 
 // 📋 FORMAT COURSE INFO - Convert course data to formatted message
@@ -1077,17 +1085,29 @@ function formatCourseInfo(course) {
     const email = getFieldValue('email') || 'N/A';
    
     
-    let datesStr = '';
-    const upcomingDates = course['Upcoming Dates'];
-    if (Array.isArray(upcomingDates) && upcomingDates.length > 0) {
-      datesStr = upcomingDates.map(
-        d => `${formatDateDMY(d.start)} to ${formatDateDMY(d.end)}`
-      ).join(' and ');
-    } else {
-      const startDate = getFieldValue('Start date') || 'N/A';
-      const endDate = getFieldValue('End Date') || 'N/A';
-      datesStr = `${formatDateDMY(startDate)} to ${formatDateDMY(endDate)}`;
-    }
+let datesStr = '';
+const upcomingDates = course['Upcoming Dates'];
+if (Array.isArray(upcomingDates) && upcomingDates.length > 0) {
+  // Only show future or ongoing date ranges
+  const validRanges = upcomingDates.filter(
+    d => isFutureOrToday(d.end)
+  );
+  if (validRanges.length > 0) {
+    datesStr = validRanges.map(
+      d => `${formatDateDMY(d.start)} to ${formatDateDMY(d.end)}`
+    ).join(' and ');
+  } else {
+    datesStr = 'NA';
+  }
+} else {
+  const startDate = course['आरंभ तिथी /Start date'] || course['Start date'];
+  const endDate = course['समाप्त तिथी /End Date'] || course['End Date'];
+  if (isFutureOrToday(endDate)) {
+    datesStr = `${formatDateDMY(startDate)} to ${formatDateDMY(endDate)}`;
+  } else {
+    datesStr = 'NA';
+  }
+}
 
 
 
