@@ -863,7 +863,7 @@ function findCourseByPartialName(partialName, courses) {
     'dem':'Demo',
     'sms': 'Safety Management System(SMS)',
     'safty': 'Safety Management System(SMS)',
-    'safty': 'Safety Management System(SMS)',
+    'safety': 'Safety Management System(SMS)',
     'sefty': 'Safety Management System(SMS)',
     'saftey': 'Safety Management System(SMS)',
     'dop': 'Delegation of Power(DOP)',
