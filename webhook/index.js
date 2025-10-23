@@ -862,10 +862,7 @@ function findCourseByPartialName(partialName, courses) {
     // Core Aviation Acronyms
     'dem':'Demo',
     'sms': 'Safety Management System(SMS)',
-    'safty': 'Safety Management System(SMS)',
     'safety': 'Safety Management System(SMS)',
-    'sefty': 'Safety Management System(SMS)',
-    'saftey': 'Safety Management System(SMS)',
     'dop': 'Delegation of Power(DOP)',
     'rrr': 'Runway Rubber Removal',
     'gem': 'GeM Procurement',
@@ -887,7 +884,6 @@ function findCourseByPartialName(partialName, courses) {
     'annex-9': 'Annex-9',
     'atm': 'Airport Terminal Management',
     'procurement': 'GeM Procurement',
-    'safety': 'Safety Management System(SMS)',
     'power': 'Data Analytics using Power Bi',
     'analytics': 'Data Analytics using Power Bi',
     'data': 'Data Analytics using Power Bi',
