@@ -899,8 +899,6 @@ function findCourseByPartialName(partialName, courses) {
     'rubber': 'Runway Rubber Removal',
     'removal': 'Runway Rubber Removal',
     // Additional mappings for better matching
-    'safety management': 'Safety Management System(SMS)',
-    'safety management system': 'Safety Management System(SMS)',
     'gem procurement': 'GeM Procurement',
     'power bi': 'Data Analytics using Power Bi',
     'data analytics': 'Data Analytics using Power Bi',
