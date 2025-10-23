@@ -783,7 +783,15 @@ app.post('/meta-webhook', webhookRateLimit, verifyWebhookSignature, validateAndS
           
           console.log('❌ NO COURSE FOUND for:', incomingMsg);
           // Send fallback response when course is not found
-          const courseNotFoundResponse = getCommonFallbackMessage(userName);
+          const queryFormLink = 'https://iaa-admin-dashboard-1-wion.vercel.app/';
+          const courseNotFoundResponse = 
+            `🤔 *Sorry, we couldn't find that course.*\n\n` +
+            `Please fill this short form and our team will assist you:\n\n` +
+            `🔗 ${queryFormLink}\n\n` +
+            `You can also try:\n` +
+            `• "show all courses"\n` +
+            `• "domain 2" (or domain number)\n` +
+            `• Type full/partial course name (e.g., "safety")`;
           
           const result = await metaApi.sendMessageWithRetry(from, courseNotFoundResponse);
           
@@ -863,6 +871,10 @@ function findCourseByPartialName(partialName, courses) {
     'dem':'Demo',
     'sms': 'Safety Management System(SMS)',
     'safety': 'Safety Management System(SMS)',
+    'safty': 'Safety Management System(SMS)',
+    'safty': 'Safety Management System(SMS)',
+    'sefty': 'Safety Management System(SMS)',
+    'saftey': 'Safety Management System(SMS)',
     'dop': 'Delegation of Power(DOP)',
     'rrr': 'Runway Rubber Removal',
     'gem': 'GeM Procurement',
