@@ -665,7 +665,7 @@ app.post('/meta-webhook', webhookRateLimit, verifyWebhookSignature, validateAndS
 
     // 👋 THANK YOU/GOODBYE HANDLER - Handle conversation ending messages (MUST BE BEFORE COURSE SEARCH)
     const goodbyeKeywords = [
-      'thank you', 'thanks', 'thankyou', 'thx', 'ty',
+      'thank you', 'thanks', 'thankyou', 'thx',
       'goodbye', 'bye', 'good bye', 'see you', 'see ya',
       'tata', 'tata bye', 'bye bye', 'take care',
       'have a good day', 'have a nice day', 'good day',
