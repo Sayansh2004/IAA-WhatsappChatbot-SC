@@ -697,6 +697,64 @@ app.post('/meta-webhook', webhookRateLimit, verifyWebhookSignature, validateAndS
         console.log('🔍 ENHANCED COURSE SEARCH:', incomingMsg);
          const startTime = Date.now();
         const courses = require('../data/courses.json');
+
+        // ---------- NEW: KEYWORD-BASED GROUP SEARCH (management, data, safety, etc.) ----------
+        const generalKeywords = [
+          'management','data','safety','finance','operations','engineering','hr',
+          'procurement','contract','communication','leadership','audit','analytics',
+          'security','stakeholder','workshop','training'
+        ];
+        const lowerMsg = incomingMsg.toLowerCase();
+        const matchedKeyword = generalKeywords.find(k => new RegExp(`\\b${k}\\b`, 'i').test(lowerMsg));
+
+        if (matchedKeyword) {
+          // Helper to get course display name
+          const getCourseName = (course) => {
+            const keys = Object.keys(course);
+            const courseNameKey = keys.find(key => key.includes('Programme') || key.includes('प्रशिक्षण'));
+            return courseNameKey ? course[courseNameKey] : '(Unnamed Course)';
+          };
+
+          // Helper to format dates (use upcomingDates if present)
+          const getDateSummary = (course) => {
+            if (Array.isArray(course['Upcoming Dates']) && course['Upcoming Dates'].length > 0) {
+              return course['Upcoming Dates'].map(d => `${formatDateDMY(d.start)} to ${formatDateDMY(d.end)}`).join(' and ');
+            }
+            const start = course['आरंभ तिथी /Start date'] || course['Start date'] || 'N/A';
+            const end = course['समाप्त तिथी /End Date'] || course['End Date'] || 'N/A';
+            return (start && end) ? `${formatDateDMY(start)} to ${formatDateDMY(end)}` : 'NA';
+          };
+
+          const matches = courses.filter(course => {
+            const name = (getCourseName(course) || '').toString().toLowerCase();
+            const category = ((course['श्रेणी Category'] || course['Category'] || '') || '').toString().toLowerCase();
+            return name.includes(matchedKeyword) || category.includes(matchedKeyword);
+          });
+
+          if (matches.length > 0) {
+            let listResp = `🔎 Courses related to "${matchedKeyword}":\n\n`;
+            matches.slice(0, 20).forEach((c, i) => { // limit to 20 results for readability
+              const cname = getCourseName(c);
+              const dates = getDateSummary(c);
+              listResp += `${i + 1}. ${cname} — ${dates}\n`;
+            });
+            listResp += `\nType the course name to get full details or fill the form: https://iaa-admin-dashboard.vercel.app`;
+            
+            const result = await metaApi.sendMessageWithRetry(from, listResp);
+            if (result.success) {
+              console.log(`✅ Sent ${matches.length} courses for keyword: ${matchedKeyword}`);
+              return res.status(200).send('OK');
+            } else {
+              console.error('❌ Failed to send keyword course list:', result.error);
+              // continue to normal flow if send fails
+            }
+          } else {
+            console.log(`ℹ️ No courses found for keyword: ${matchedKeyword}`);
+            // allow normal search fallback to run
+          }
+        }
+        // ---------- END NEW KEYWORD SEARCH ----------
+        
         console.log('📊 Total courses loaded:', courses.length);
         
         // 🎯 ENHANCED SEARCH: Try multiple approaches to find course names in any query format
